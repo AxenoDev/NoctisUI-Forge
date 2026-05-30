@@ -1,8 +1,8 @@
-package fr.libnaus.noctisui.hud;
+package me.axeno.noctisui.hud;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import fr.libnaus.noctisui.utils.GuiUtils;
-import fr.libnaus.noctisui.utils.Position;
+import me.axeno.noctisui.utils.GuiUtils;
+import me.axeno.noctisui.utils.Position;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

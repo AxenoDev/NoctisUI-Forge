@@ -1,4 +1,4 @@
-package fr.libnaus.noctisui.utils;
+package me.axeno.noctisui.utils;
 
 public class MathsUtils {
 

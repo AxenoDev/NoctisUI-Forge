@@ -1,4 +1,4 @@
-package fr.libnaus.noctisui.utils;
+package me.axeno.noctisui.utils;
 
 public class Color3f {
     private final float r, g, b;

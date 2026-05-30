@@ -1,4 +1,4 @@
-package fr.libnaus.noctisui.utils;
+package me.axeno.noctisui.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;

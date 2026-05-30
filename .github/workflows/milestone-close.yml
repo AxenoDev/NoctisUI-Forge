@@ -1,0 +1,79 @@
+name: Handle closing a milestone
+
+on:
+  milestone:
+    types: [closed]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  handle-milestone:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # -----------------------------
+      # Build and release NoctisUI
+      # -----------------------------
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build with Gradle
+        run: |
+          VERSION=$(echo ${{ github.event.milestone.title }} | tr "." "_")
+          ./gradlew build remapJar
+          mkdir -p builds
+          FINAL_JAR=$(ls build/libs/*[0-9].jar | head -n 1)
+          cp "$FINAL_JAR" "builds/noctisui-$VERSION.jar"
+        env:
+          TAG: ${{ github.event.milestone.title }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: noctisui-${{ github.event.milestone.title }}.jar
+          path: builds/
+
+      - name: Publish to Modrinth
+        if: env.MODRINTH_TOKEN != ''
+        run: |
+          chmod +x ./gradlew
+          echo "Publishing to Modrinth for tag: $TAG"
+          # Run the Gradle Modrinth publish task provided by the com.modrinth.minotaur plugin
+          ./gradlew --no-daemon modrinth
+        env:
+          TAG: ${{ github.event.milestone.title }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.milestone.title }}
+          name: Release ${{ github.event.milestone.title }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          make_latest: true
+          body: |
+            # Update of NoctisUI ${{ github.event.milestone.title }}
+            
+            ## Description
+            ${{ github.event.milestone.description }}
+          files: |
+            build/devlibs/noctisui-*-dev.jar 
+            builds/**
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
