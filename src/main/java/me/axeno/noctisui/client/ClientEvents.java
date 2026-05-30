@@ -56,20 +56,23 @@ public class ClientEvents {
 
         @SubscribeEvent
         public static void onRegisterReloadListeners(RegisterClientReloadListenersEvent event) {
-            event.registerReloadListener(new SimplePreparableReloadListener<Void>() {
-                @Override
-                protected Void prepare(ResourceManager resourceManager, ProfilerFiller profiler) {
-                    return null;
-                }
-
-                @Override
-                protected void apply(Void object, ResourceManager resourceManager, ProfilerFiller profiler) {
-                    if (NoctisUIClient.getInstance() != null) {
-                        NoctisUIClient.getInstance().getFonts().reload(resourceManager);
-                    }
-                    Shaders.reload(resourceManager);
-                }
-            });
+            event.registerReloadListener(new NoctisUIAssetsReloadListener());
         }
+
+        public static class NoctisUIAssetsReloadListener extends SimplePreparableReloadListener<Void> {
+            @Override
+            protected Void prepare(ResourceManager p_10796_, ProfilerFiller p_10797_) {
+                return null;
+            }
+
+
+            @Override
+            protected void apply(Void p_10793_, ResourceManager p_10794_, ProfilerFiller p_10795_) {
+                if (NoctisUIClient.getInstance() != null)
+                    NoctisUIClient.getInstance().getFonts().reload(p_10794_);
+                Shaders.reload(p_10794_);
+            }
+        }
+
     }
 }
