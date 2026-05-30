@@ -219,9 +219,9 @@ afterEvaluate {
                 artifact tasks.named('reobfJar').flatMap { it.archiveFile }
 
                 pom {
-                    name = 'NoctisUI'
+                    name = 'NoctisUI-Forge'
                     description = 'NoctisUI is a Minecraft UI library that makes it easy to create menus and HUDs.'
-                    url = 'https://github.com/AxenoDev/NoctisUI'
+                    url = 'https://github.com/AxenoDev/NoctisUI-Forge'
                     licenses {
                         license {
                             name = 'GNU General Public License v3.0'
@@ -236,9 +236,9 @@ afterEvaluate {
                         }
                     }
                     scm {
-                        connection = 'scm:git:git://github.com/AxenoDev/NoctisUI.git'
-                        developerConnection = 'scm:git:ssh://github.com:AxenoDev/NoctisUI.git'
-                        url = 'https://github.com/AxenoDev/NoctisUI'
+                        connection = 'scm:git:git://github.com/AxenoDev/NoctisUI-Forge.git'
+                        developerConnection = 'scm:git:ssh://github.com:AxenoDev/NoctisUI-Forge.git'
+                        url = 'https://github.com/AxenoDev/NoctisUI-Forge'
                     }
                 }
             }

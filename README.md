@@ -33,7 +33,7 @@ repositories {
 }
 
 dependencies {
-    modImplementation "com.github.AxenoDev:NoctisUI:VERSION"
+    modImplementation "com.github.AxenoDev:NoctisUI-Forge:VERSION"
 }
 ```
 
