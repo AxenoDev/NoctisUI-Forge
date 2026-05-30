@@ -53,7 +53,6 @@ jobs:
         run: |
           chmod +x ./gradlew
           echo "Publishing to Modrinth for tag: $TAG"
-          # Run the Gradle Modrinth publish task provided by the com.modrinth.minotaur plugin
           ./gradlew --no-daemon modrinth
         env:
           TAG: ${{ github.event.milestone.title }}

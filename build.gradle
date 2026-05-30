@@ -131,10 +131,9 @@ tasks.named('jar', Jar).configure {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-    finalizedBy 'reobfJar' // Important pour Forge : Obfuscation du Jar
+    finalizedBy 'reobfJar'
 }
 
-// --- LOGIQUE REQUÊTES GITHUB & MODRINTH ---
 def fetchReleaseDescription = { String releaseTag ->
     try {
         if (!releaseTag || releaseTag == 'unknown' || releaseTag.startsWith('dev-')) {
@@ -197,7 +196,7 @@ afterEvaluate {
         versionName = "NoctisUI ${version}"
 
         // Utilise de manière sécurisée la tâche reobfJar générée tardivement par Forge
-        uploadFile = tasks.named('reobfJar').flatMap { it.archiveFile }
+        uploadFile = tasks.named('jar').flatMap { it.archiveFile }
 
         gameVersions = ["${minecraft_version}"]
         loaders = ["forge"]
@@ -216,7 +215,7 @@ afterEvaluate {
                 artifactId = 'noctisui'
 
                 // Utilise aussi le jar ré-obfusqué pour Maven
-                artifact tasks.named('reobfJar').flatMap { it.archiveFile }
+                artifact tasks.named('jar').flatMap { it.archiveFile }
 
                 pom {
                     name = 'NoctisUI-Forge'
