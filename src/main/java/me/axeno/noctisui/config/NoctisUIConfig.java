@@ -1,8 +1,5 @@
 package me.axeno.noctisui.config;
 
-import fr.libnaus.noctisui.client.NoctisUIClient;
-import lombok.Getter;
-import net.minecraftforge.common.ForgeConfig;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
