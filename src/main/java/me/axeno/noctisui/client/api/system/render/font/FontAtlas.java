@@ -49,20 +49,20 @@ public class FontAtlas implements QuickImports
     public FontAtlas(final ResourceManager manager, final String name, String modid) throws IOException
     {
         this(name,
-                new InputStreamReader(manager.open(new ResourceLocation(modid, "fonts/" + name + ".json"))),
-                manager.open(new ResourceLocation(modid, "fonts/" + name + ".png")));
+                new InputStreamReader(manager.open(ResourceLocation.fromNamespaceAndPath(modid, "fonts/" + name + ".json"))),
+                manager.open(ResourceLocation.fromNamespaceAndPath(modid, "fonts/" + name + ".png")));
     }
 
     public FontAtlas(final ResourceManager manager, final String name) throws IOException
     {
         this(name,
-                new InputStreamReader(manager.open(new ResourceLocation(NoctisUI.MODID, "fonts/" + name + ".json"))),
-                manager.open(new ResourceLocation(NoctisUI.MODID, "fonts/" + name + ".png")));
+                new InputStreamReader(manager.open(ResourceLocation.fromNamespaceAndPath(NoctisUI.MODID, "fonts/" + name + ".json"))),
+                manager.open(ResourceLocation.fromNamespaceAndPath(NoctisUI.MODID, "fonts/" + name + ".png")));
     }
 
     public FontAtlas(final String name, final Reader meta, final InputStream texture) throws IOException
     {
-        this.textureId = new ResourceLocation(NoctisUI.MODID, "font/" + name);
+        this.textureId = ResourceLocation.fromNamespaceAndPath(NoctisUI.MODID, "font/" + name);
         this.tex = new DynamicTexture(NativeImage.read(texture));
         Minecraft.getInstance().getTextureManager().register(textureId, tex);
 
