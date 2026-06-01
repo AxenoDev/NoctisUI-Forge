@@ -8,9 +8,9 @@ import me.axeno.noctisui.client.screen.TestScreen;
 import me.axeno.noctisui.config.NoctisUIConfig;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
-import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
+
+import java.util.concurrent.CompletableFuture;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
@@ -56,22 +56,19 @@ public class ClientEvents {
 
         @SubscribeEvent
         public static void onRegisterReloadListeners(RegisterClientReloadListenersEvent event) {
-            event.registerReloadListener(new NoctisUIAssetsReloadListener());
+            event.registerReloadListener(noctisUIAssetsReloadListener());
         }
 
-        public static class NoctisUIAssetsReloadListener extends SimplePreparableReloadListener<Void> {
-            @Override
-            protected Void prepare(ResourceManager p_10796_, ProfilerFiller p_10797_) {
-                return null;
-            }
-
-
-            @Override
-            protected void apply(Void p_10793_, ResourceManager p_10794_, ProfilerFiller p_10795_) {
-                if (NoctisUIClient.getInstance() != null)
-                    NoctisUIClient.getInstance().getFonts().reload(p_10794_);
-                Shaders.reload(p_10794_);
-            }
+        private static PreparableReloadListener noctisUIAssetsReloadListener() {
+            return (barrier, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
+                    CompletableFuture.runAsync(() -> {}, backgroundExecutor)
+                            .thenCompose(barrier::wait)
+                            .thenRunAsync(() -> {
+                                if (NoctisUIClient.getInstance() != null) {
+                                    NoctisUIClient.getInstance().getFonts().reload(resourceManager);
+                                }
+                                Shaders.reload(resourceManager);
+                            }, gameExecutor);
         }
 
     }
