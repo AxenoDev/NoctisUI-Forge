@@ -8,9 +8,6 @@ import me.axeno.noctisui.client.screen.TestScreen;
 import me.axeno.noctisui.config.NoctisUIConfig;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.packs.resources.PreparableReloadListener;
-
-import java.util.concurrent.CompletableFuture;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.InputEvent;
 import net.minecraftforge.client.event.RegisterClientReloadListenersEvent;
@@ -56,19 +53,7 @@ public class ClientEvents {
 
         @SubscribeEvent
         public static void onRegisterReloadListeners(RegisterClientReloadListenersEvent event) {
-            event.registerReloadListener(noctisUIAssetsReloadListener());
-        }
-
-        private static PreparableReloadListener noctisUIAssetsReloadListener() {
-            return (barrier, resourceManager, preparationsProfiler, reloadProfiler, backgroundExecutor, gameExecutor) ->
-                    CompletableFuture.runAsync(() -> {}, backgroundExecutor)
-                            .thenCompose(barrier::wait)
-                            .thenRunAsync(() -> {
-                                if (NoctisUIClient.getInstance() != null) {
-                                    NoctisUIClient.getInstance().getFonts().reload(resourceManager);
-                                }
-                                Shaders.reload(resourceManager);
-                            }, gameExecutor);
+            event.registerReloadListener(new NoctisUIAssetsReloadListener());
         }
 
     }

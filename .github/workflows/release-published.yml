@@ -24,9 +24,9 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - name: Publish to GitHub Packages
+      - name: Build and publish to GitHub Packages
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
           GITHUB_ACTOR: ${{ github.actor }}
           TAG: ${{ github.event.release.tag_name }}
-        run: ./gradlew remapJar publish
+        run: ./gradlew build devJar publish

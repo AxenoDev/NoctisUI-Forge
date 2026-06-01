@@ -115,23 +115,41 @@ tasks.named('processResources', ProcessResources).configure {
     }
 }
 
+def jarManifestAttributes = [
+        'Specification-Title'     : mod_id,
+        'Specification-Vendor'    : mod_authors,
+        'Specification-Version'   : '1',
+        'Implementation-Title'    : project.name,
+        'Implementation-Version'  : project.jar.archiveVersion,
+        'Implementation-Vendor'   : mod_authors,
+        'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
+        'GIT-COMMIT'              : gitHash
+]
+
 tasks.named('jar', Jar).configure {
     manifest {
-        attributes([
-                'Specification-Title'     : mod_id,
-                'Specification-Vendor'    : mod_authors,
-                'Specification-Version'   : '1',
-                'Implementation-Title'    : project.name,
-                'Implementation-Version'  : project.jar.archiveVersion,
-                'Implementation-Vendor'   : mod_authors,
-                'Implementation-Timestamp': new Date().format("yyyy-MM-dd'T'HH:mm:ssZ"),
-                'GIT-COMMIT'              : gitHash
-        ])
+        attributes(jarManifestAttributes)
     }
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
     finalizedBy 'reobfJar'
+}
+
+// Deobfuscated jar for other Forge mods in local dev (do NOT put the reobfuscated jar in run/mods).
+tasks.register('devJar', Jar) {
+    group = 'build'
+    description = 'Builds a deobfuscated jar for local development in other Forge projects'
+    dependsOn classes
+    archiveClassifier.set('dev')
+    from(sourceSets.main.output)
+    manifest {
+        attributes(jarManifestAttributes)
+    }
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 def fetchReleaseDescription = { String releaseTag ->
@@ -208,14 +226,15 @@ afterEvaluate {
         versionType = determineModrinthVersionType(tag)
     }
 
-    // --- CONFIGURATION MAVEN (GITHUB PACKAGES) ---
     publishing {
         publications {
             register('mavenJava', MavenPublication) {
                 artifactId = 'noctisui'
 
-                // Utilise aussi le jar ré-obfusqué pour Maven
                 artifact tasks.named('jar').flatMap { it.archiveFile }
+                artifact(tasks.named('devJar').flatMap { it.archiveFile }) {
+                    classifier = 'dev'
+                }
 
                 pom {
                     name = 'NoctisUI-Forge'
@@ -256,7 +275,7 @@ afterEvaluate {
 
     // Sécurité additionnelle : s'assure du bon ordre des tâches lors d'une publication pure
     tasks.named('publish').configure {
-        dependsOn 'reobfJar'
+        dependsOn 'reobfJar', 'devJar'
     }
 }
 

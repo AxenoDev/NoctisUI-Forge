@@ -38,9 +38,19 @@ jobs:
         env:
           SNAPSHOT: true
           GITHUB_SHA: ${{ github.sha }}
-        run: ./gradlew build
+        run: ./gradlew build devJar
 
-      - name: Upload jar
+      - name: Stage jars for upload
+        run: |
+          mkdir -p builds
+          PROD_JAR=$(ls build/libs/*.jar | grep -v '\-dev\.jar$' | head -n 1)
+          DEV_JAR=$(ls build/libs/*-dev.jar | head -n 1)
+          cp "$PROD_JAR" builds/
+          cp "$DEV_JAR" builds/
+          echo "Production: $(basename "$PROD_JAR")"
+          echo "Development: $(basename "$DEV_JAR") (use this jar in run/mods for local Forge dev)"
+
+      - name: Upload jars
         uses: actions/upload-artifact@v4
         with:
           name: "noctisui-${{ github.sha }}"
