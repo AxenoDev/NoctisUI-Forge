@@ -15,12 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-/**
- * Displays animated toast notifications on the HUD.
- */
 public class NotificationManager implements QuickImports
 {
-    private static final int CARD_WIDTH = 198;
+    private static final int CARD_WIDTH = 180;
     private static final int CARD_MIN_HEIGHT = 38;
     private static final int CARD_MAX_HEIGHT = 60;
     private static final int LINE_HEIGHT = 9;
@@ -35,9 +32,7 @@ public class NotificationManager implements QuickImports
     private static final float TITLE_SIZE = 7.9f;
     private static final float BODY_SIZE = 6.9f;
     private static final float STACK_SIZE = 6.1f;
-    private static final float CORNER_RADIUS = 9f;
-    private static final float PROGRESS_HEIGHT = 1.8f;
-    private static final float PROGRESS_INSET = 8f;
+    private static final float CORNER_RADIUS = 6f;
 
     @Getter
     private static NotificationManager instance;
@@ -206,8 +201,6 @@ public class NotificationManager implements QuickImports
         if (notification.hasStack()) {
             renderStackBadge(matrices, notification, x, y, alpha, accent);
         }
-
-        renderProgressBar(matrices, notification, x, (int) (y + height - PROGRESS_HEIGHT - 5), alpha, accent, accentBright);
     }
 
     private void renderIconBadge(PoseStack matrices, NotificationType type, float x, float y, float alpha)
@@ -246,23 +239,6 @@ public class NotificationManager implements QuickImports
                 NotificationTheme.withAlpha(NotificationTheme.TEXT_PRIMARY, alpha), true);
     }
 
-    private void renderProgressBar(PoseStack matrices, Notification notification, int x, int y, float alpha,
-                                   Color accent, Color accentBright)
-    {
-        float barWidth = CARD_WIDTH - PROGRESS_INSET * 2;
-        float progress = notification.getProgress();
-        float remaining = 1f - progress;
-
-        Color track = NotificationTheme.withAlpha(NotificationTheme.PROGRESS_TRACK, alpha);
-        Render2DEngine.drawRoundedRect(matrices, x + PROGRESS_INSET, y, barWidth, PROGRESS_HEIGHT, 1.2f, track);
-
-        if (remaining > 0.01f) {
-            float fillWidth = barWidth * remaining;
-            Render2DEngine.drawRoundedRect(matrices, x + PROGRESS_INSET, y, fillWidth, PROGRESS_HEIGHT, 1.2f,
-                    NotificationTheme.withAlpha(accentBright, alpha));
-        }
-    }
-
     private int cardHeight(Notification notification)
     {
         int height = CARD_MIN_HEIGHT;
@@ -278,11 +254,6 @@ public class NotificationManager implements QuickImports
         }
 
         return Math.min(Math.max(height, CARD_MIN_HEIGHT), CARD_MAX_HEIGHT);
-    }
-
-    private float contentAreaHeight(Notification notification)
-    {
-        return cardHeight(notification) - PADDING * 2 - PROGRESS_HEIGHT - 8;
     }
 
     private List<String> wrapText(String text, int maxWidth, boolean bold, float size)

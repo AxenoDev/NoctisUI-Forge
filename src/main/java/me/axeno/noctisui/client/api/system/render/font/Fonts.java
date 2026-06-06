@@ -2,6 +2,7 @@ package me.axeno.noctisui.client.api.system.render.font;
 
 import me.axeno.noctisui.client.component.system.NotificationManager;
 import lombok.Getter;
+import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public class Fonts {
 
     private final List<FontAtlas> loadedAtlases = new ArrayList<>();
 
-    public void reload(net.minecraft.server.packs.resources.ResourceManager manager) {
+    public void reload(ResourceManager manager) {
         release();
         try {
             this.interBold = load(manager, "inter-bold");

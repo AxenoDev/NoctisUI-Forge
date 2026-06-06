@@ -10,16 +10,11 @@ public final class NotificationTheme
 {
     public static final Color TEXT_PRIMARY = hex(0xF4F7FB);
     public static final Color TEXT_SECONDARY = hex(0x9AA8BC);
-    public static final Color TEXT_MUTED = hex(0x6B7A8F);
 
     public static final Color CARD_BACKGROUND = rgba(16, 18, 26, 242);
-    public static final Color CARD_BORDER = rgba(255, 255, 255, 18);
 
-    public static final Color CARD_BORDER_LIGHT = rgba(255, 255, 255, 12);
     public static final Color CARD_BORDER_DARK = rgba(0, 0, 0, 60);
     public static final Color PROGRESS_TRACK = rgba(255, 255, 255, 14);
-    public static final Color STACK_BADGE_BG = rgba(255, 255, 255, 10);
-    public static final Color STACK_BADGE_TEXT = hex(0xC8D4E4);
 
     private NotificationTheme()
     {
