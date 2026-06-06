@@ -195,7 +195,6 @@ public class NotificationManager implements QuickImports
             Color titleColor = NotificationTheme.withAlpha(NotificationTheme.TEXT_PRIMARY, alpha);
             textY = renderWrappedText(matrices, notification.getTitle(), textX, textY, maxTextWidth, titleColor, true,
                     TITLE_SIZE);
-            textY += 0;
         }
 
         if (hasText(notification.getMessage())) {
