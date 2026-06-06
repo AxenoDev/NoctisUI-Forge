@@ -16,7 +16,6 @@ float roundedBoxSDF(vec2 center, vec2 size, float radius) {
     return length(max(abs(center) - size + radius, 0.0)) - radius;
 }
 
-// 9-tap separable Gaussian, 1-pixel steps (sigma ~ 2)
 vec4 gaussianBlur1D(sampler2D tex, vec2 uv, vec2 texelStep) {
     vec4 result = texture(tex, uv) * 0.2270270270;
     result += texture(tex, uv + texelStep * 1.0) * 0.1945945946;
@@ -33,7 +32,6 @@ vec4 gaussianBlur1D(sampler2D tex, vec2 uv, vec2 texelStep) {
 void main() {
     vec2 uv = (gl_FragCoord.xy + 0.5) / InputResolution;
 
-    // 2.0 = composite only (sample pre-blurred texture, apply rounded mask)
     if (ApplyMask > 1.5) {
         vec4 color = texture(InputSampler, uv);
 

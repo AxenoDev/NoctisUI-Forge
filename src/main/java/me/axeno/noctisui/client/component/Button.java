@@ -163,8 +163,10 @@ public class Button extends UIBaseComponent implements QuickImports
         if (outlineWidth > 0 && outlineColor != null)
             Render2DEngine.drawRoundedOutline(matrices, x, y, width, height, radius, outlineWidth, outlineColor);
 
-        float textWidth = font.getWidth(label, fontSize); float textHeight = font.getLineHeight(fontSize);
-        float textX = x + (width - textWidth) / 2; float textY = y + (height - textHeight) / 2;
+        float textWidth = font.getWidth(label, fontSize);
+        float textHeight = font.getLineHeight(fontSize);
+        float textX = x + (width - textWidth) / 2;
+        float textY = y + (height - textHeight) / 2;
 
         if (!shadow) {
             font.render(matrices, label, textX, textY, fontSize, currentLabelColor.getValue());

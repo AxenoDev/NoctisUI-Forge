@@ -6,6 +6,7 @@ import com.google.gson.JsonParser;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
+import lombok.Setter;
 import me.axeno.noctisui.NoctisUI;
 import me.axeno.noctisui.client.api.system.Shaders;
 import me.axeno.noctisui.client.common.QuickImports;
@@ -38,6 +39,7 @@ public class FontAtlas implements QuickImports
     private final int width;
     private final int height;
 
+    @Setter
     private float size = 9;
 
     private final Glyph[] glyphs = new Glyph[ 2048 * 2048 ];
@@ -48,15 +50,13 @@ public class FontAtlas implements QuickImports
 
     public FontAtlas(final ResourceManager manager, final String name, String modid) throws IOException
     {
-        this(name,
-                new InputStreamReader(manager.open(ResourceLocation.fromNamespaceAndPath(modid, "fonts/" + name + ".json"))),
+        this(name, new InputStreamReader(manager.open(ResourceLocation.fromNamespaceAndPath(modid, "fonts/" + name + ".json"))),
                 manager.open(ResourceLocation.fromNamespaceAndPath(modid, "fonts/" + name + ".png")));
     }
 
     public FontAtlas(final ResourceManager manager, final String name) throws IOException
     {
-        this(name,
-                new InputStreamReader(manager.open(ResourceLocation.fromNamespaceAndPath(NoctisUI.MODID, "fonts/" + name + ".json"))),
+        this(name, new InputStreamReader(manager.open(ResourceLocation.fromNamespaceAndPath(NoctisUI.MODID, "fonts/" + name + ".json"))),
                 manager.open(ResourceLocation.fromNamespaceAndPath(NoctisUI.MODID, "fonts/" + name + ".png")));
     }
 
@@ -78,7 +78,8 @@ public class FontAtlas implements QuickImports
         this.fontMetrics = FontMetrics.parse(atlasJson.getAsJsonObject("metrics"));
 
         for (final JsonElement glyphElement : atlasJson.getAsJsonArray("glyphs")) {
-            final JsonObject glyphObject = glyphElement.getAsJsonObject(); final Glyph glyph = Glyph.parse(glyphObject);
+            final JsonObject glyphObject = glyphElement.getAsJsonObject();
+            final Glyph glyph = Glyph.parse(glyphObject);
 
             this.glyphs[ glyph.getUnicode() ] = glyph;
         }
@@ -185,8 +186,10 @@ public class FontAtlas implements QuickImports
                     float x1 = currentX + glyph.getPlaneRight() * size;
                     float y0 = y + fontMetrics.getAscender() * size - glyph.getPlaneTop() * size;
                     float y1 = y + fontMetrics.getAscender() * size - glyph.getPlaneBottom() * size;
-                    float u0 = glyph.getAtlasLeft() / width; float u1 = glyph.getAtlasRight() / width;
-                    float v0 = glyph.getAtlasTop() / height; float v1 = glyph.getAtlasBottom() / height;
+                    float u0 = glyph.getAtlasLeft() / width;
+                    float u1 = glyph.getAtlasRight() / width;
+                    float v0 = glyph.getAtlasTop() / height;
+                    float v1 = glyph.getAtlasBottom() / height;
 
                     bufferBuilder.vertex(model, x0, y0, 0).uv(u0, 1 - v0).color(charColor.getRed() / 255f, charColor.getGreen() / 255f, charColor.getBlue() / 255f, alpha / 255f).endVertex();
                     bufferBuilder.vertex(model, x0, y1, 0).uv(u0, 1 - v1).color(charColor.getRed() / 255f, charColor.getGreen() / 255f, charColor.getBlue() / 255f, alpha / 255f).endVertex();
@@ -201,7 +204,8 @@ public class FontAtlas implements QuickImports
             BufferUploader.drawWithShader(bufferBuilder.end());
         }
 
-        RenderSystem.setShader(() -> lastShader); RenderSystem.disableBlend();
+        RenderSystem.setShader(() -> lastShader);
+        RenderSystem.disableBlend();
     }
 
     public void renderDiagonalGradient(PoseStack matrices, String text, float x, float y, float size,
@@ -215,7 +219,8 @@ public class FontAtlas implements QuickImports
         ShaderInstance lastShader = RenderSystem.getShader();
         bindMsdfShader();
 
-        final Matrix4f model = matrices.last().pose(); int alpha = primaryColor.getAlpha();
+        final Matrix4f model = matrices.last().pose();
+        int alpha = primaryColor.getAlpha();
 
         final BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -247,15 +252,18 @@ public class FontAtlas implements QuickImports
                     float x1 = currentX + glyph.getPlaneRight() * size;
                     float y0 = y + fontMetrics.getAscender() * size - glyph.getPlaneTop() * size;
                     float y1 = y + fontMetrics.getAscender() * size - glyph.getPlaneBottom() * size;
-                    float u0 = glyph.getAtlasLeft() / width; float u1 = glyph.getAtlasRight() / width;
-                    float v0 = glyph.getAtlasTop() / height; float v1 = glyph.getAtlasBottom() / height;
+                    float u0 = glyph.getAtlasLeft() / width;
+                    float u1 = glyph.getAtlasRight() / width;
+                    float v0 = glyph.getAtlasTop() / height;
+                    float v1 = glyph.getAtlasBottom() / height;
 
                     bufferBuilder.vertex(model, x0, y0, 0).uv(u0, 1 - v0).color(charColor.getRed() / 255f, charColor.getGreen() / 255f, charColor.getBlue() / 255f, alpha / 255f).endVertex();
                     bufferBuilder.vertex(model, x0, y1, 0).uv(u0, 1 - v1).color(charColor.getRed() / 255f, charColor.getGreen() / 255f, charColor.getBlue() / 255f, alpha / 255f).endVertex();
                     bufferBuilder.vertex(model, x1, y1, 0).uv(u1, 1 - v1).color(charColor.getRed() / 255f, charColor.getGreen() / 255f, charColor.getBlue() / 255f, alpha / 255f).endVertex();
                     bufferBuilder.vertex(model, x1, y0, 0).uv(u1, 1 - v0).color(charColor.getRed() / 255f, charColor.getGreen() / 255f, charColor.getBlue() / 255f, alpha / 255f).endVertex();
                     hasContent = true;
-                } currentX += size * glyph.getAdvance();
+                }
+                currentX += size * glyph.getAdvance();
             }
         }
 
@@ -279,7 +287,8 @@ public class FontAtlas implements QuickImports
     public static Color interpolateColor(Color color1, Color color2, int speed, int index)
     {
         int angle = (int) (((System.currentTimeMillis()) / speed + index) % 360);
-        angle = (angle >= 180 ? 360 - angle : angle) * 2; return interpolateColorSimple(color1, color2, angle / 360f);
+        angle = (angle >= 180 ? 360 - angle : angle) * 2;
+        return interpolateColorSimple(color1, color2, angle / 360f);
     }
 
     /**
@@ -302,21 +311,24 @@ public class FontAtlas implements QuickImports
     public void render(final PoseStack matrices, final FormattedCharSequence text, final float x, final float y,
                        final float size, final int color)
     {
-        if (Shaders.MSDF == null) {
-            ResourceManager manager = mc.getResourceManager(); Shaders.load();
-        }
+        if (Shaders.MSDF == null) Shaders.load();
 
-        RenderSystem.enableBlend(); RenderSystem.defaultBlendFunc();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         ShaderInstance lastShader = RenderSystem.getShader();
         bindMsdfShader();
 
         this.textX = x;
 
-        final Matrix4f model = matrices.last().pose(); final int alpha = FastColor.ARGB32.alpha(color);
-        final int red = FastColor.ARGB32.red(color); final int green = FastColor.ARGB32.green(color);
+        final Matrix4f model = matrices.last().pose();
+        final int alpha = FastColor.ARGB32.alpha(color);
+        final int red = FastColor.ARGB32.red(color);
+        final int green = FastColor.ARGB32.green(color);
         final int blue = FastColor.ARGB32.blue(color);
 
-        this.textColor[ 0 ] = red; this.textColor[ 1 ] = green; this.textColor[ 2 ] = blue;
+        this.textColor[ 0 ] = red;
+        this.textColor[ 1 ] = green;
+        this.textColor[ 2 ] = blue;
 
         final BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
@@ -326,36 +338,46 @@ public class FontAtlas implements QuickImports
             final Glyph glyph = this.glyphs[ codePoint ];
 
             if (glyph == null) return true; if (style.getColor() == null) {
-            this.textColor[ 0 ] = red; this.textColor[ 1 ] = green; this.textColor[ 2 ] = blue;
-        }
-        else {
-            final int rgb = style.getColor().getValue(); this.textColor[ 0 ] = FastColor.ARGB32.red(rgb);
-            this.textColor[ 1 ] = FastColor.ARGB32.green(rgb); this.textColor[ 2 ] = FastColor.ARGB32.blue(rgb);
-        } this.textX += this.visit(model, bufferBuilder, glyph, textX, y, size, alpha); return true;
+                this.textColor[ 0 ] = red;
+                this.textColor[ 1 ] = green;
+                this.textColor[ 2 ] = blue;
+            } else {
+                final int rgb = style.getColor().getValue();
+                this.textColor[ 0 ] = FastColor.ARGB32.red(rgb);
+                this.textColor[ 1 ] = FastColor.ARGB32.green(rgb);
+                this.textColor[ 2 ] = FastColor.ARGB32.blue(rgb);
+            }
+            this.textX += this.visit(model, bufferBuilder, glyph, textX, y, size, alpha);
+            return true;
         });
 
         BufferUploader.drawWithShader(bufferBuilder.end());
 
-        RenderSystem.setShader(() -> lastShader); RenderSystem.disableBlend();
+        RenderSystem.setShader(() -> lastShader);
+        RenderSystem.disableBlend();
     }
 
     public void render(PoseStack matrices, String text, float x, float y, float size, int color)
     {
         if (Shaders.MSDF == null) Shaders.load();
 
-        RenderSystem.enableBlend(); RenderSystem.defaultBlendFunc();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
         ShaderInstance lastShader = RenderSystem.getShader();
         bindMsdfShader();
 
-        final Matrix4f model = matrices.last().pose(); int alpha = FastColor.ARGB32.alpha(color);
-        int red = FastColor.ARGB32.red(color); int green = FastColor.ARGB32.green(color);
+        final Matrix4f model = matrices.last().pose();
+        int alpha = FastColor.ARGB32.alpha(color);
+        int red = FastColor.ARGB32.red(color);
+        int green = FastColor.ARGB32.green(color);
         int blue = FastColor.ARGB32.blue(color);
 
-        this.textColor[ 0 ] = red; this.textColor[ 1 ] = green; this.textColor[ 2 ] = blue;
+        this.textColor[ 0 ] = red;
+        this.textColor[ 1 ] = green;
+        this.textColor[ 2 ] = blue;
 
         final BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
         bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-        boolean hasContent = false;
 
         for (int i = 0; i < text.length(); i++) {
             int unicode = text.codePointAt(i);
@@ -364,31 +386,34 @@ public class FontAtlas implements QuickImports
                 final int colorIndex = FORMATTING_PALETTE.indexOf(Character.toLowerCase(text.charAt(i + 1)));
                 if (colorIndex >= 0 && colorIndex < 16) {
                     System.arraycopy(FORMATTING_COLOR_PALETTE[ colorIndex ], 0, textColor, 0, 3);
-                }
-                else if (colorIndex == 21) {
+                } else if (colorIndex == 21) {
                     textColor[ 0 ] = red; textColor[ 1 ] = green; textColor[ 2 ] = blue;
-                } i++;
+                }
+                i++;
             }
             else {
                 final Glyph glyph = this.glyphs[ unicode ];
 
                 if (glyph == null) continue; if (glyph.getPlaneRight() - glyph.getPlaneLeft() != 0) {
-                    float x0 = x + glyph.getPlaneLeft() * size; float x1 = x + glyph.getPlaneRight() * size;
+                    float x0 = x + glyph.getPlaneLeft() * size;
+                    float x1 = x + glyph.getPlaneRight() * size;
                     float y0 = y + fontMetrics.getAscender() * size - glyph.getPlaneTop() * size;
                     float y1 = y + fontMetrics.getAscender() * size - glyph.getPlaneBottom() * size;
-                    float u0 = glyph.getAtlasLeft() / width; float u1 = glyph.getAtlasRight() / width;
-                    float v0 = glyph.getAtlasTop() / height; float v1 = glyph.getAtlasBottom() / height;
+                    float u0 = glyph.getAtlasLeft() / width;
+                    float u1 = glyph.getAtlasRight() / width;
+                    float v0 = glyph.getAtlasTop() / height;
+                    float v1 = glyph.getAtlasBottom() / height;
 
                     bufferBuilder.vertex(model, x0, y0, 0).uv(u0, 1 - v0).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
                     bufferBuilder.vertex(model, x0, y1, 0).uv(u0, 1 - v1).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
                     bufferBuilder.vertex(model, x1, y1, 0).uv(u1, 1 - v1).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
                     bufferBuilder.vertex(model, x1, y0, 0).uv(u1, 1 - v0).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
-                    hasContent = true;
                 } x += size * glyph.getAdvance();
             }
         }
 
-        BufferUploader.drawWithShader(bufferBuilder.end()); RenderSystem.setShader(() -> lastShader);
+        BufferUploader.drawWithShader(bufferBuilder.end());
+        RenderSystem.setShader(() -> lastShader);
         RenderSystem.disableBlend();
     }
 
@@ -396,7 +421,8 @@ public class FontAtlas implements QuickImports
                                  final float size, final int color)
     {
         RenderSystem.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
-        this.render(matrices, text, x + 0.75F, y + 0.75F, size, color); RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        this.render(matrices, text, x + 0.75F, y + 0.75F, size, color);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         this.render(matrices, text, x, y, size, color);
     }
 
@@ -404,7 +430,8 @@ public class FontAtlas implements QuickImports
                                  final int color)
     {
         RenderSystem.setShaderColor(0.25F, 0.25F, 0.25F, 1.0F);
-        this.render(matrices, text, x + 0.75F, y + 0.75F, size, color); RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+        this.render(matrices, text, x + 0.75F, y + 0.75F, size, color);
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         this.render(matrices, text, x, y, size, color);
     }
 
@@ -412,22 +439,20 @@ public class FontAtlas implements QuickImports
                         final float y, final float size, final int alpha)
     {
         if (glyph.getPlaneRight() - glyph.getPlaneLeft() != 0) {
-            float x0 = x + glyph.getPlaneLeft() * size; float x1 = x + glyph.getPlaneRight() * size;
+            float x0 = x + glyph.getPlaneLeft() * size;
+            float x1 = x + glyph.getPlaneRight() * size;
             float y0 = y + fontMetrics.getAscender() * size - glyph.getPlaneTop() * size;
             float y1 = y + fontMetrics.getAscender() * size - glyph.getPlaneBottom() * size;
-            float u0 = glyph.getAtlasLeft() / width; float u1 = glyph.getAtlasRight() / width;
-            float v0 = glyph.getAtlasTop() / height; float v1 = glyph.getAtlasBottom() / height;
+            float u0 = glyph.getAtlasLeft() / width;
+            float u1 = glyph.getAtlasRight() / width;
+            float v0 = glyph.getAtlasTop() / height;
+            float v1 = glyph.getAtlasBottom() / height;
 
             bufferBuilder.vertex(model, x0, y0, 0).uv(u0, 1 - v0).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
             bufferBuilder.vertex(model, x0, y1, 0).uv(u0, 1 - v1).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
             bufferBuilder.vertex(model, x1, y1, 0).uv(u1, 1 - v1).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
             bufferBuilder.vertex(model, x1, y0, 0).uv(u1, 1 - v0).color(textColor[0] / 255f, textColor[1] / 255f, textColor[2] / 255f, alpha / 255f).endVertex();
         } return size * glyph.getAdvance();
-    }
-
-    public void setSize(final float size)
-    {
-        this.size = size;
     }
 
     public final float getSize()
@@ -448,9 +473,11 @@ public class FontAtlas implements QuickImports
         {
             final Glyph glyph = this.glyphs[ codePoint ];
 
-            if (glyph == null) return true; if (glyph.getPlaneRight() - glyph.getPlaneLeft() != 0) {
-            sum[ 0 ] += size * glyph.getAdvance();
-        } return true;
+            if (glyph == null) return true;
+            if (glyph.getPlaneRight() - glyph.getPlaneLeft() != 0) {
+                sum[ 0 ] += size * glyph.getAdvance();
+            }
+            return true;
         }); return sum[ 0 ];
     }
 
@@ -462,17 +489,18 @@ public class FontAtlas implements QuickImports
     public float getWidth(String text, float size)
     {
         float sum = 0; for (int i = 0; i < text.length(); i++) {
-        final int unicode = text.codePointAt(i);
+            final int unicode = text.codePointAt(i);
 
-        if (unicode == '§' && i + 1 < text.length()) {
-            i++;
-        }
-        else {
-            final Glyph glyph = glyphs[ unicode ]; if (glyph != null) {
-                sum += size * glyph.getAdvance();
+            if (unicode == '§' && i + 1 < text.length()) {
+                i++;
+            } else {
+                final Glyph glyph = glyphs[ unicode ];
+                if (glyph != null) {
+                    sum += size * glyph.getAdvance();
+                }
             }
         }
-    } return sum;
+        return sum;
     }
 
     public final float getLineHeight()
@@ -487,7 +515,9 @@ public class FontAtlas implements QuickImports
 
     static {
         for (int i = 0; i < 32; ++i) {
-            int j = (i >> 3 & 1) * 85; int k = (i >> 2 & 1) * 170 + j; int l = (i >> 1 & 1) * 170 + j;
+            int j = (i >> 3 & 1) * 85;
+            int k = (i >> 2 & 1) * 170 + j;
+            int l = (i >> 1 & 1) * 170 + j;
             int i1 = (i & 1) * 170 + j;
 
             if (i == 6) {
@@ -499,7 +529,8 @@ public class FontAtlas implements QuickImports
                 k /= 4; l /= 4; i1 /= 4;
             }
 
-            FORMATTING_COLOR_PALETTE[ i ][ 0 ] = k; FORMATTING_COLOR_PALETTE[ i ][ 1 ] = l;
+            FORMATTING_COLOR_PALETTE[ i ][ 0 ] = k;
+            FORMATTING_COLOR_PALETTE[ i ][ 1 ] = l;
             FORMATTING_COLOR_PALETTE[ i ][ 2 ] = i1;
         }
     }
