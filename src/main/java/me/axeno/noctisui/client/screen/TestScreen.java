@@ -3,6 +3,7 @@ package me.axeno.noctisui.client.screen;
 import me.axeno.noctisui.client.NoctisUIClient;
 import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
 import me.axeno.noctisui.client.component.Button;
+import me.axeno.noctisui.client.component.Checkbox;
 import me.axeno.noctisui.client.component.DivComponent;
 import me.axeno.noctisui.client.component.TextComponent;
 import me.axeno.noctisui.client.component.input.TextInput;
@@ -16,10 +17,11 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestScreen extends Screen {
+public class TestScreen extends Screen
+{
 
     private static final float PANEL_WIDTH = 440;
-    private static final float PANEL_HEIGHT = 360;
+    private static final float PANEL_HEIGHT = 400;
 
     private final List<TextInput> textInputs = new ArrayList<>();
     private DivComponent root;
@@ -27,12 +29,14 @@ public class TestScreen extends Screen {
     private TextInput nameInput;
     private TextInput emailInput;
 
-    public TestScreen() {
+    public TestScreen()
+    {
         super(Component.literal("NoctisUI Test"));
     }
 
     @Override
-    protected void init() {
+    protected void init()
+    {
         textInputs.clear();
 
         float panelX = (this.width - PANEL_WIDTH) / 2f;
@@ -71,7 +75,27 @@ public class TestScreen extends Screen {
                 createNotifyButton(224, 214, 92, 28, "Alerte", new Color(160, 110, 30), NotificationType.WARNING));
         root.addChild(createNotifyButton(324, 214, 92, 28, "Info", new Color(45, 90, 160), NotificationType.INFO));
 
-        Button submitButton = new Button(24, 258, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
+        Checkbox rememberCheckbox = new Checkbox(
+                24, 256,
+                14, 14,
+                "Se souvenir de moi",
+                new Color(40, 40, 55, 200),
+                new Color(70, 110, 220),
+                new Color(180, 180, 200)
+        );
+        rememberCheckbox.setFont(interMedium);
+        rememberCheckbox.setFontSize(9);
+        rememberCheckbox.setRadius(3);
+        rememberCheckbox.setOutline(new Color(80, 80, 110, 200), 1f);
+        rememberCheckbox.hover(160, new Color(55, 55, 75, 220), new Color(90, 130, 240));
+        rememberCheckbox.setOnToggle(cb -> setStatus(
+                cb.isChecked() ? "Se souvenir activé." : "Se souvenir désactivé.",
+                cb.isChecked() ? new Color(120, 200, 140) : new Color(180, 180, 200)
+        ));
+        root.addChild(rememberCheckbox);
+
+
+        Button submitButton = new Button(24, 284, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
         submitButton.setRadius(8);
         submitButton.setFont(interBold);
         submitButton.setFontSize(11);
@@ -79,7 +103,7 @@ public class TestScreen extends Screen {
         submitButton.setOnClick(b -> onSubmit());
         root.addChild(submitButton);
 
-        Button closeButton = new Button(226, 258, 190, 34, "Fermer (Esc)", new Color(55, 55, 65),
+        Button closeButton = new Button(226, 284, 190, 34, "Fermer (Esc)", new Color(55, 55, 65),
                 new Color(200, 200, 210));
         closeButton.setRadius(8);
         closeButton.setFont(interMedium);
@@ -88,18 +112,20 @@ public class TestScreen extends Screen {
         closeButton.setOnClick(b -> onClose());
         root.addChild(closeButton);
 
-        statusText = new TextComponent(24, 312, "Prêt.", 9, new Color(120, 200, 140), interMedium);
+        statusText = new TextComponent(24, 338, "Prêt.", 9, new Color(120, 200, 140), interMedium);
         root.addChild(statusText);
     }
 
-    private TextInput createTextInput(float x, float y, float w, float h, FontAtlas font, TextInput.InputType type) {
+    private TextInput createTextInput(float x, float y, float w, float h, FontAtlas font, TextInput.InputType type)
+    {
         TextInput input = new TextInput(x, y, w, h, font, type);
         textInputs.add(input);
         return input;
     }
 
     private Button createNotifyButton(float x, float y, float w, float h, String label, Color bg,
-            NotificationType type) {
+                                      NotificationType type)
+    {
         Button button = new Button(x, y, w, h, label, bg, Color.WHITE);
         button.setRadius(6);
         button.setFontSize(9);
@@ -108,17 +134,20 @@ public class TestScreen extends Screen {
         return button;
     }
 
-    private void onSubmit() {
+    private void onSubmit()
+    {
         String name = nameInput.getText().trim();
         String email = emailInput.getText().trim();
 
-        if (name.isEmpty()) {
+        if (name.isEmpty())
+        {
             setStatus("Entrez un nom.", new Color(220, 120, 120));
             NotificationManager.getInstance().warning("test_validation", "Validation", "Le champ nom est requis.");
             return;
         }
 
-        if (!emailInput.isValid()) {
+        if (!emailInput.isValid())
+        {
             setStatus("Email invalide.", new Color(220, 120, 120));
             NotificationManager.getInstance().error("test_validation", "Validation", "Adresse email invalide.");
             return;
@@ -128,62 +157,78 @@ public class TestScreen extends Screen {
         NotificationManager.getInstance().success("test_submit", "Enregistré", "Bonjour " + name + " !");
     }
 
-    private void showNotification(NotificationType type) {
+    private void showNotification(NotificationType type)
+    {
         NotificationManager manager = NotificationManager.getInstance();
-        switch (type) {
-            case SUCCESS -> {
+        switch (type)
+        {
+            case SUCCESS ->
+            {
                 manager.success("test_success", "Succès", "Notification de succès.");
                 setStatus("Notification succès affichée.", new Color(120, 200, 140));
             }
-            case ERROR -> {
+            case ERROR ->
+            {
                 manager.error("test_error", "Erreur", "Notification d'erreur.");
                 setStatus("Notification erreur affichée.", new Color(220, 120, 120));
             }
-            case WARNING -> {
+            case WARNING ->
+            {
                 manager.warning("test_warning", "Alerte", "Notification d'avertissement.");
                 setStatus("Notification alerte affichée.", new Color(220, 180, 100));
             }
-            case INFO -> {
+            case INFO ->
+            {
                 manager.info("test_info", "Info", "Notification informative.");
                 setStatus("Notification info affichée.", new Color(120, 160, 220));
             }
         }
     }
 
-    private void setStatus(String message, Color color) {
+    private void setStatus(String message, Color color)
+    {
         statusText.setText(message);
         statusText.setColor(color);
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (root != null) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
+    {
+        if (root != null)
+        {
             root.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
     @Override
-    public void renderBackground(GuiGraphics guiGraphics) {
+    public void renderBackground(GuiGraphics guiGraphics)
+    {
         // Keep the world visible so blur can sample it.
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (root != null) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    {
+        if (root != null)
+        {
             root.mouseClicked(mouseX, mouseY, button);
         }
         return true;
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        for (TextInput input : textInputs) {
-            if (input.keyPressed(keyCode, scanCode, modifiers)) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+    {
+        for (TextInput input : textInputs)
+        {
+            if (input.keyPressed(keyCode, scanCode, modifiers))
+            {
                 return true;
             }
         }
 
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE)
+        {
             onClose();
             return true;
         }
@@ -192,9 +237,12 @@ public class TestScreen extends Screen {
     }
 
     @Override
-    public boolean charTyped(char chr, int modifiers) {
-        for (TextInput input : textInputs) {
-            if (input.charTyped(chr, modifiers)) {
+    public boolean charTyped(char chr, int modifiers)
+    {
+        for (TextInput input : textInputs)
+        {
+            if (input.charTyped(chr, modifiers))
+            {
                 return true;
             }
         }
@@ -202,11 +250,13 @@ public class TestScreen extends Screen {
     }
 
     @Override
-    public boolean isPauseScreen() {
+    public boolean isPauseScreen()
+    {
         return false;
     }
 
-    private enum NotificationType {
+    private enum NotificationType
+    {
         SUCCESS, ERROR, WARNING, INFO
     }
 }
