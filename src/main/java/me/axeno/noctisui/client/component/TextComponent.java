@@ -1,17 +1,20 @@
 package me.axeno.noctisui.client.component;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import lombok.Getter;
+import lombok.Setter;
 import me.axeno.noctisui.client.NoctisUIClient;
 import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
 import me.axeno.noctisui.client.utils.Color;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 /**
  * A simple text component for rendering text in the UI.
  *
- * <p>This component allows you to specify the position, font size, text content, color, and font of the text to be rendered.</p>
+ * <p>
+ * This component allows you to specify the position, font size, text content,
+ * color, and font of the text to be rendered.
+ * </p>
  *
  * <pre>
  * {@code
@@ -24,7 +27,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
  * }
  * </pre>
  *
- * <p>TextComponents are typically used as children of {@link DivComponent} or other container components.</p>
+ * <p>
+ * TextComponents are typically used as children of {@link DivComponent} or
+ * other container components.
+ * </p>
  *
  * @author axeno
  */
@@ -47,20 +53,24 @@ public class TextComponent extends UIBaseComponent
      * @param font     The FontAtlas to use for rendering the text.
      *
      *                 <pre>
-     *                                 {@code
-     *                                 FontAtlas customFont = NoctisUIClient.getInstance().getFonts().getPoppins();
-     *                                 TextComponent text = new TextComponent(20, 20, "Custom", 14, Color.RED, customFont);
-     *                                 }
-     *                                 </pre>
+     *                                                                                 {@code
+     *                                                                                 FontAtlas customFont = NoctisUIClient.getInstance().getFonts().getPoppins();
+     *                                                                                 TextComponent text = new TextComponent(20, 20, "Custom", 14, Color.RED, customFont);
+     *                                                                                 }
+     *                                                                                 </pre>
      */
     public TextComponent(float x, float y, String text, float fontSize, Color color, FontAtlas font)
     {
-        super(x, y, 0, 0); this.text = text; this.fontSize = fontSize; this.color = color;
+        super(x, y, 0, 0);
+        this.text = text;
+        this.fontSize = fontSize;
+        this.color = color;
         this.font = font != null ? font : NoctisUIClient.getInstance().getFonts().getPoppins();
     }
 
     /**
-     * Creates a new TextComponent with the specified parameters using the default font.
+     * Creates a new TextComponent with the specified parameters using the default
+     * font.
      *
      * @param x        The X-coordinate of the text position.
      * @param y        The Y-coordinate of the text position.
@@ -69,10 +79,10 @@ public class TextComponent extends UIBaseComponent
      * @param color    The color of the text.
      *
      *                 <pre>
-     *                                 {@code
-     *                                 TextComponent text = new TextComponent(50, 50, "Hello World", 16, Color.WHITE);
-     *                                 }
-     *                                 </pre>
+     *                                                                                 {@code
+     *                                                                                 TextComponent text = new TextComponent(50, 50, "Hello World", 16, Color.WHITE);
+     *                                                                                 }
+     *                                                                                 </pre>
      */
     public TextComponent(float x, float y, String text, float fontSize, Color color)
     {
@@ -92,21 +102,7 @@ public class TextComponent extends UIBaseComponent
     {
         if (font == null || text == null) return;
 
-        PoseStack matrices = context.pose(); font.render(matrices, text, x, y, fontSize, color.getValue());
-    }
-
-    /**
-     * TextComponents do not handle mouse clicks by default.
-     *
-     * @param mouseX The mouse X position.
-     * @param mouseY The mouse Y position.
-     * @param button The mouse button index.
-     *
-     * @return Always returns false.
-     */
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
-    {
-        return false;
+        PoseStack matrices = context.pose();
+        font.render(matrices, text, x, y, fontSize, color.getValue());
     }
 }

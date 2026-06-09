@@ -1,8 +1,8 @@
 package me.axeno.noctisui.client.component;
 
-import me.axeno.noctisui.client.utils.Color;
 import lombok.Getter;
 import lombok.Setter;
+import me.axeno.noctisui.client.utils.Color;
 
 /**
  * A base abstract class for UI components.
@@ -29,7 +29,10 @@ public abstract class UIBaseComponent implements UIComponent
 
     public UIBaseComponent(float x, float y, float width, float height)
     {
-        this.x = x; this.y = y; this.width = width; this.height = height;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
     }
 
     public UIBaseComponent()
@@ -42,12 +45,13 @@ public abstract class UIBaseComponent implements UIComponent
      *
      * @param x X coordinate.
      * @param y Y coordinate.
-     *
      * @return this instance (for chaining)
      */
     public UIBaseComponent setPosition(float x, float y)
     {
-        this.x = x; this.y = y; return this;
+        this.x = x;
+        this.y = y;
+        return this;
     }
 
     /**
@@ -55,12 +59,13 @@ public abstract class UIBaseComponent implements UIComponent
      *
      * @param width  Component width.
      * @param height Component height.
-     *
      * @return this instance (for chaining)
      */
     public UIBaseComponent setSize(float width, float height)
     {
-        this.width = width; this.height = height; return this;
+        this.width = width;
+        this.height = height;
+        return this;
     }
 
     /**
@@ -70,12 +75,15 @@ public abstract class UIBaseComponent implements UIComponent
      * @param y      Y coordinate.
      * @param width  Width.
      * @param height Height.
-     *
      * @return this instance (for chaining)
      */
     public UIBaseComponent setBounds(float x, float y, float width, float height)
     {
-        this.x = x; this.y = y; this.width = width; this.height = height; return this;
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        return this;
     }
 
     /**
@@ -83,7 +91,6 @@ public abstract class UIBaseComponent implements UIComponent
      *
      * @param mouseX X coordinate of mouse.
      * @param mouseY Y coordinate of mouse.
-     *
      * @return true if inside bounds.
      */
     public boolean contains(double mouseX, double mouseY)
@@ -98,7 +105,8 @@ public abstract class UIBaseComponent implements UIComponent
      */
     public UIBaseComponent toggleVisibility()
     {
-        this.visible = !this.visible; return this;
+        this.visible = !this.visible;
+        return this;
     }
 
     /**
@@ -108,6 +116,7 @@ public abstract class UIBaseComponent implements UIComponent
      */
     public UIBaseComponent toggleEnabled()
     {
-        this.enabled = !this.enabled; return this;
+        this.enabled = !this.enabled;
+        return this;
     }
 }

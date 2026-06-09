@@ -1,13 +1,13 @@
 package me.axeno.noctisui.client.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import lombok.Getter;
+import lombok.Setter;
 import me.axeno.noctisui.client.api.system.Render2DEngine;
 import me.axeno.noctisui.client.common.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,16 +41,13 @@ import java.util.function.Predicate;
 public class DivComponent extends UIBaseComponent implements QuickImports
 {
 
+    private final List<UIBaseComponent> children = new ArrayList<>();
     @Setter
     private Color backgroundColor = null;
     private float cornerRadius = 0f;
-
     private Color outlineColor;
     private float outlineWidth = 0f;
-
     private Consumer<DivComponent> onClickAction;
-    private final List<UIBaseComponent> children = new ArrayList<>();
-
     @Setter
     private Runnable customRenderer;
 
@@ -80,7 +77,7 @@ public class DivComponent extends UIBaseComponent implements QuickImports
      * <pre>
      * {@code
      * div.setCornerRadius(12); // Rounded corners of 12 pixels
-     * div.setCornerRadius(0);  // Sharp corners
+     * div.setCornerRadius(0); // Sharp corners
      * }
      * </pre>
      *
@@ -94,7 +91,8 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     /**
      * Enables background blur on this container.
      *
-     * @param quality    blur strength in pixels (recommended 12–24; higher = smoother but more GPU cost)
+     * @param quality    blur strength in pixels (recommended 12–24; higher =
+     *                   smoother but more GPU cost)
      * @param brightness output brightness multiplier (1.0 = neutral)
      */
     public DivComponent enableBlur(float quality, float brightness)
@@ -110,17 +108,19 @@ public class DivComponent extends UIBaseComponent implements QuickImports
      *
      * <pre>
      * {@code
-     * div.setOutline(Color.RED, 3);  // Red outline with 3px thickness
+     * div.setOutline(Color.RED, 3); // Red outline with 3px thickness
      * div.setOutline(Color.BLUE, 0); // Removes outline
      * }
      * </pre>
      *
      * @param color The outline color.
-     * @param width The outline thickness in pixels. Values below 0 are clamped to 0.
+     * @param width The outline thickness in pixels. Values below 0 are clamped to
+     *              0.
      */
     public void setOutline(Color color, float width)
     {
-        this.outlineColor = color; this.outlineWidth = Math.max(0, width);
+        this.outlineColor = color;
+        this.outlineWidth = Math.max(0, width);
     }
 
     /**
@@ -132,7 +132,8 @@ public class DivComponent extends UIBaseComponent implements QuickImports
      * }
      * </pre>
      *
-     * @param action A {@link Consumer} that receives this {@code DivComponent} when clicked.
+     * @param action A {@link Consumer} that receives this {@code DivComponent} when
+     *               clicked.
      */
     public void setOnClick(Consumer<DivComponent> action)
     {
@@ -161,9 +162,8 @@ public class DivComponent extends UIBaseComponent implements QuickImports
      * <pre>
      * {@code
      * div.addChildren(
-     *     new TextComponent(10, 10, "Hello", 14, Color.WHITE),
-     *     new ImageComponent(20, 20, 50, 50, texture)
-     * );
+     *         new TextComponent(10, 10, "Hello", 14, Color.WHITE),
+     *         new ImageComponent(20, 20, 50, 50, texture));
      * }
      * </pre>
      *
@@ -241,35 +241,49 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     @Override
     public void render(GuiGraphics context, double mouseX, double mouseY, float delta)
     {
-        if (!visible) return;
+        if (!visible)
+            return;
 
-        PoseStack matrices = context.pose(); RenderSystem.enableBlend(); RenderSystem.defaultBlendFunc();
+        PoseStack matrices = context.pose();
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
 
-        matrices.pushPose(); matrices.translate(x, y, 0);
+        matrices.pushPose();
+        matrices.translate(x, y, 0);
 
-        if (blurEnabled) {
+        if (blurEnabled)
+        {
             Render2DEngine.drawBlur(matrices, 0, 0, width, height, cornerRadius, blurQuality, blurBrightness);
         }
 
-        if (backgroundColor != null) {
-            if (cornerRadius > 0) {
+        if (backgroundColor != null)
+        {
+            if (cornerRadius > 0)
+            {
                 Render2DEngine.drawRoundedRect(matrices, 0, 0, width, height, cornerRadius, backgroundColor);
                 if (outlineWidth > 0)
-                    Render2DEngine.drawRoundedOutline(matrices, 0, 0, width, height, cornerRadius, outlineWidth, outlineColor);
-            }
-            else {
-                Render2DEngine.drawRect(matrices, 0, 0, width, height, backgroundColor); if (outlineWidth > 0)
+                    Render2DEngine.drawRoundedOutline(matrices, 0, 0, width, height, cornerRadius, outlineWidth,
+                            outlineColor);
+            } else
+            {
+                Render2DEngine.drawRect(matrices, 0, 0, width, height, backgroundColor);
+                if (outlineWidth > 0)
                     Render2DEngine.drawOutline(matrices, 0, 0, width, height, outlineWidth, outlineColor);
             }
         }
 
-        if (customRenderer != null) customRenderer.run();
+        if (customRenderer != null)
+            customRenderer.run();
 
-        for (UIBaseComponent child : children) {
-            if (!child.isVisible() || !child.enabled) continue; child.render(context, mouseX - x, mouseY - y, delta);
+        for (UIBaseComponent child : children)
+        {
+            if (!child.isVisible() || !child.enabled)
+                continue;
+            child.render(context, mouseX - x, mouseY - y, delta);
         }
 
-        matrices.popPose(); RenderSystem.disableBlend();
+        matrices.popPose();
+        RenderSystem.disableBlend();
     }
 
     /**
@@ -277,7 +291,6 @@ public class DivComponent extends UIBaseComponent implements QuickImports
      *
      * @param mouseX The X coordinate of the mouse.
      * @param mouseY The Y coordinate of the mouse.
-     *
      * @return {@code true} if the mouse is within bounds; otherwise {@code false}.
      */
     @Override
@@ -289,7 +302,8 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     /**
      * Handles a click interaction within this component.
      * <p>
-     * If the click occurs within the component’s bounds, the click action (if defined)
+     * If the click occurs within the component’s bounds, the click action (if
+     * defined)
      * is executed and the event is propagated to all child components.
      * </p>
      *
@@ -304,8 +318,10 @@ public class DivComponent extends UIBaseComponent implements QuickImports
      */
     public void onClick(float mouseX, float mouseY)
     {
-        if (contains(mouseX, mouseY)) {
-            if (onClickAction != null) onClickAction.accept(this);
+        if (contains(mouseX, mouseY))
+        {
+            if (onClickAction != null)
+                onClickAction.accept(this);
 
             for (UIComponent child : children)
                 child.mouseClicked(mouseX - x, mouseY - y, 0);
@@ -319,16 +335,38 @@ public class DivComponent extends UIBaseComponent implements QuickImports
      * @param mouseX The mouse X position.
      * @param mouseY The mouse Y position.
      * @param button The mouse button index.
-     *
      * @return Always returns {@code false} to allow event propagation.
      */
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button)
     {
-        if (!visible || !contains(mouseX, mouseY)) return false;
+        if (!visible || !contains(mouseX, mouseY))
+            return false;
 
-        if (onClickAction != null) onClickAction.accept(this);
+        if (onClickAction != null)
+            onClickAction.accept(this);
 
-        children.forEach(child -> child.mouseClicked(mouseX - x, mouseY - y, button)); return false;
+        children.forEach(child -> child.mouseClicked(mouseX - x, mouseY - y, button));
+        return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY)
+    {
+        if (!visible || !contains(mouseX, mouseY))
+            return false;
+
+        children.forEach(child -> child.mouseDragged(mouseX - x, mouseY - y, button, deltaX, deltaY));
+        return false;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button)
+    {
+        if (!visible || !contains(mouseX, mouseY))
+            return false;
+
+        children.forEach(child -> child.mouseReleased(mouseX - x, mouseY - y, button));
+        return false;
     }
 }

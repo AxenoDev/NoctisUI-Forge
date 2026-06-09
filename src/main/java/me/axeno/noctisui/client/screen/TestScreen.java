@@ -50,8 +50,7 @@ public class TestScreen extends Screen
 
         // ── Header ───────────────────────────────────────────────────────────
         root.addChild(new TextComponent(24, 20, "NoctisUI", 18, new Color(220, 220, 255), interBold));
-        root.addChild(new TextComponent(24, 44, "GUI de test — composants Forge 1.20.1", 10,
-                new Color(140, 140, 160), interMedium));
+        root.addChild(new TextComponent(24, 44, "GUI de test — composants Forge 1.20.1", 10, new Color(140, 140, 160), interMedium));
 
         // ── Nom ──────────────────────────────────────────────────────────────
         root.addChild(new TextComponent(24, 78, "Nom", 9, new Color(180, 180, 200), interMedium));
@@ -76,49 +75,45 @@ public class TestScreen extends Screen
         root.addChild(createNotifyButton(324, 214, 92, 28, "Info", new Color(45, 90, 160), NotificationType.INFO));
 
         // ── Checkbox ──────────────────────────────────────────────────────────
-        Checkbox rememberCheckbox = new Checkbox(
-                24, 256, 14, 14,
-                "Se souvenir de moi",
-                new Color(40, 40, 55, 200),
-                new Color(70, 110, 220),
-                new Color(180, 180, 200)
-        );
+        Checkbox rememberCheckbox = new Checkbox(24, 256, 14, 14, "Se souvenir de moi", new Color(40, 40, 55, 200), new Color(70, 110, 220), new Color(180, 180, 200));
         rememberCheckbox.setFont(interMedium);
         rememberCheckbox.setFontSize(9);
         rememberCheckbox.setRadius(3);
         rememberCheckbox.setOutline(new Color(80, 80, 110, 200), 1f);
         rememberCheckbox.hover(160, new Color(55, 55, 75, 220), new Color(90, 130, 240));
-        rememberCheckbox.setOnToggle(cb -> setStatus(
-                cb.isChecked() ? "Se souvenir activé." : "Se souvenir désactivé.",
-                cb.isChecked() ? new Color(120, 200, 140) : new Color(180, 180, 200)
-        ));
+        rememberCheckbox.setOnToggle(cb -> setStatus(cb.isChecked() ? "Se souvenir activé." : "Se souvenir désactivé.", cb.isChecked() ? new Color(120, 200, 140) : new Color(180, 180, 200)));
         root.addChild(rememberCheckbox);
 
         // ── Switch ────────────────────────────────────────────────────────────
-        Switch notifSwitch = new Switch(
-                24, 278, 30, 16,
-                "Activer les notifications",
-                new Color(50, 50, 65, 220),   // track OFF
-                new Color(70, 110, 220),       // track ON
-                Color.WHITE,                   // thumb
-                new Color(180, 180, 200)       // label
+        Switch notifSwitch = new Switch(24, 278, 30, 16, "Activer les notifications", new Color(50, 50, 65, 220), // track OFF
+                new Color(70, 110, 220), // track ON
+                Color.WHITE, // thumb
+                new Color(180, 180, 200) // label
         );
         notifSwitch.setFont(interMedium);
         notifSwitch.setFontSize(9);
         notifSwitch.setOutline(new Color(80, 80, 110, 200), 1f);
-        notifSwitch.hover(160,
-                new Color(65, 65, 80, 240),    // hover track OFF
-                new Color(90, 130, 240),        // hover track ON
-                Color.WHITE                    // hover thumb
+        notifSwitch.hover(160, new Color(65, 65, 80, 240), // hover track OFF
+                new Color(90, 130, 240), // hover track ON
+                Color.WHITE // hover thumb
         );
-        notifSwitch.setOnToggle(sw -> setStatus(
-                sw.isEnabled() ? "Notifications activées." : "Notifications désactivées.",
-                sw.isEnabled() ? new Color(120, 200, 140) : new Color(180, 180, 200)
-        ));
+        notifSwitch.setOnToggle(sw -> setStatus(sw.isEnabled() ? "Notifications activées." : "Notifications désactivées.", sw.isEnabled() ? new Color(120, 200, 140) : new Color(180, 180, 200)));
         root.addChild(notifSwitch);
 
+        // ── Slider ─────────────────────────────────────────────────────────────
+        Slider volumeSlider = new Slider(24, 306, 392, 20, "Volume", new Color(180, 180, 200), 0f, 100f, 50f, new Color(70, 110, 220), new Color(80, 80, 100), Color.WHITE);
+        volumeSlider.setFont(interMedium);
+        volumeSlider.setFontSize(9);
+        volumeSlider.setShowTicks(true);
+        volumeSlider.setStep(1f);
+        volumeSlider.setShowValueInLabel(true);
+        volumeSlider.setValue(50f);
+        volumeSlider.setOnChanged(s -> setStatus("Volume: " + Math.round(s.getValue()), new Color(140, 200, 220)));
+        volumeSlider.setOnRelease(s -> NotificationManager.getInstance().info("slider_release", "Slider", "Valeur réglée: " + Math.round(s.getValue())));
+        root.addChild(volumeSlider);
+
         // ── Boutons principaux ────────────────────────────────────────────────
-        Button submitButton = new Button(24, 306, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
+        Button submitButton = new Button(24, 340, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
         submitButton.setRadius(8);
         submitButton.setFont(interBold);
         submitButton.setFontSize(11);
@@ -126,8 +121,7 @@ public class TestScreen extends Screen
         submitButton.setOnClick(b -> onSubmit());
         root.addChild(submitButton);
 
-        Button closeButton = new Button(226, 306, 190, 34, "Fermer (Esc)", new Color(55, 55, 65),
-                new Color(200, 200, 210));
+        Button closeButton = new Button(226, 340, 190, 34, "Fermer (Esc)", new Color(55, 55, 65), new Color(200, 200, 210));
         closeButton.setRadius(8);
         closeButton.setFont(interMedium);
         closeButton.setFontSize(10);
@@ -136,7 +130,7 @@ public class TestScreen extends Screen
         root.addChild(closeButton);
 
         // ── Status ────────────────────────────────────────────────────────────
-        statusText = new TextComponent(24, 358, "Prêt.", 9, new Color(120, 200, 140), interMedium);
+        statusText = new TextComponent(24, 388, "Prêt.", 9, new Color(120, 200, 140), interMedium);
         root.addChild(statusText);
     }
 
@@ -149,8 +143,7 @@ public class TestScreen extends Screen
         return input;
     }
 
-    private Button createNotifyButton(float x, float y, float w, float h, String label, Color bg,
-                                      NotificationType type)
+    private Button createNotifyButton(float x, float y, float w, float h, String label, Color bg, NotificationType type)
     {
         Button button = new Button(x, y, w, h, label, bg, Color.WHITE);
         button.setRadius(6);
@@ -222,8 +215,7 @@ public class TestScreen extends Screen
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
     {
-        if (root != null)
-            root.render(guiGraphics, mouseX, mouseY, partialTick);
+        if (root != null) root.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     @Override
@@ -235,8 +227,21 @@ public class TestScreen extends Screen
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button)
     {
-        if (root != null)
-            root.mouseClicked(mouseX, mouseY, button);
+        if (root != null) root.mouseClicked(mouseX, mouseY, button);
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(double p_94722_, double p_94723_, int p_94724_)
+    {
+        if (root != null) root.mouseReleased(p_94722_, p_94723_, p_94724_);
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(double p_94699_, double p_94700_, int p_94701_, double p_94702_, double p_94703_)
+    {
+        if (root != null) root.mouseDragged(p_94699_, p_94700_, p_94701_, p_94702_, p_94703_);
         return true;
     }
 
@@ -245,8 +250,7 @@ public class TestScreen extends Screen
     {
         for (TextInput input : textInputs)
         {
-            if (input.keyPressed(keyCode, scanCode, modifiers))
-                return true;
+            if (input.keyPressed(keyCode, scanCode, modifiers)) return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_ESCAPE)
@@ -263,8 +267,7 @@ public class TestScreen extends Screen
     {
         for (TextInput input : textInputs)
         {
-            if (input.charTyped(chr, modifiers))
-                return true;
+            if (input.charTyped(chr, modifiers)) return true;
         }
         return super.charTyped(chr, modifiers);
     }

@@ -9,7 +9,10 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * A UI component that displays an image at a specified position and size.
  *
- * <p>This component allows you to set the texture, position, and size of the image to be rendered.</p>
+ * <p>
+ * This component allows you to set the texture, position, and size of the image
+ * to be rendered.
+ * </p>
  *
  * <pre>
  * {@code
@@ -22,7 +25,10 @@ import net.minecraft.resources.ResourceLocation;
  * }
  * </pre>
  *
- * <p>ImageComponents can be added as children to container components like {@link DivComponent}.</p>
+ * <p>
+ * ImageComponents can be added as children to container components like
+ * {@link DivComponent}.
+ * </p>
  *
  * @author axeno
  */
@@ -43,15 +49,16 @@ public class ImageComponent extends UIBaseComponent
      * @param texture The ResourceLocation of the texture to be displayed.
      *
      *                <pre>
-     *                {@code
-     *                ResourceLocation texture = new ResourceLocation("modid", "textures/gui/image.png");
-     *                ImageComponent image = new ImageComponent(10, 10, 64, 64, texture);
-     *                }
-     *                </pre>
+     *                                                             {@code
+     *                                                             ResourceLocation texture = new ResourceLocation("modid", "textures/gui/image.png");
+     *                                                             ImageComponent image = new ImageComponent(10, 10, 64, 64, texture);
+     *                                                             }
+     *                                                             </pre>
      */
     public ImageComponent(int x, int y, int width, int height, ResourceLocation texture)
     {
-        super(x, y, width, height); this.texture = texture;
+        super(x, y, width, height);
+        this.texture = texture;
     }
 
     /**
@@ -65,27 +72,16 @@ public class ImageComponent extends UIBaseComponent
     @Override
     public void render(GuiGraphics context, double mouseX, double mouseY, float delta)
     {
-        if (texture != null) {
-            RenderSystem.enableBlend(); RenderSystem.defaultBlendFunc(); RenderSystem.setShaderTexture(0, texture);
-            RenderSystem.texParameter(3553, 10241, 9729); RenderSystem.texParameter(3553, 10240, 9729);
+        if (texture != null)
+        {
+            RenderSystem.enableBlend();
+            RenderSystem.defaultBlendFunc();
+            RenderSystem.setShaderTexture(0, texture);
+            RenderSystem.texParameter(3553, 10241, 9729);
+            RenderSystem.texParameter(3553, 10240, 9729);
             context.blit(texture, (int) x, (int) y, 0, 0, (int) width, (int) height, (int) width, (int) height);
             RenderSystem.disableBlend();
         }
-    }
-
-    /**
-     * ImageComponents do not handle mouse clicks by default.
-     *
-     * @param mouseX The mouse X position.
-     * @param mouseY The mouse Y position.
-     * @param button The mouse button index.
-     *
-     * @return Always returns false.
-     */
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
-    {
-        return false;
     }
 
 }
