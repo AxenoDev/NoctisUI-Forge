@@ -92,7 +92,7 @@ public class FontAtlas implements QuickImports
 
         final JsonObject atlasJson = JsonParser.parseReader(meta).getAsJsonObject();
 
-        if (!"msdf".equals(atlasJson.getAsJsonObject("type").get("width").getAsString()))
+        if (!"msdf".equals(atlasJson.getAsJsonObject("atlas").get("type").getAsString()))
         {
             throw new RuntimeException("Unsupported atlas-type");
         }
