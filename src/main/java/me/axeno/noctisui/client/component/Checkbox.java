@@ -3,11 +3,11 @@ package me.axeno.noctisui.client.component;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
-import me.axeno.noctisui.client.NoctisUIClient;
 import me.axeno.noctisui.client.api.system.Render2DEngine;
 import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
 import me.axeno.noctisui.client.common.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
+import me.axeno.noctisui.client.utils.TextPosition;
 import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.function.Consumer;
@@ -22,23 +22,25 @@ public class Checkbox extends UIBaseComponent implements QuickImports
 
     @Setter
     public int fontSize = 9;
+
     @Getter
     @Setter
     private boolean checked;
+
     @Getter
     @Setter
     private String label;
+
     @Getter
     @Setter
     private Color labelColor;
+
     @Setter
-    private FontAtlas font = NoctisUIClient.getInstance().getFonts().getInterMedium();
+    private FontAtlas font = fonts.getInterMedium();
+
     @Setter
     private boolean shadow = false;
 
-    /**
-     * Spacing in pixels between the box edge and the label.
-     */
     @Setter
     private float textSpacing = 5f;
 
@@ -240,7 +242,7 @@ public class Checkbox extends UIBaseComponent implements QuickImports
 
         if (checked)
         {
-            FontAtlas lucide = NoctisUIClient.getInstance().getFonts().getLucide();
+            FontAtlas lucide = fonts.getLucide();
 
             if (lucide != null)
             {
@@ -260,10 +262,8 @@ public class Checkbox extends UIBaseComponent implements QuickImports
         float[] labelPos = resolveLabelPosition();
         if (labelPos != null)
         {
-            if (!shadow)
-                font.render(matrices, label, labelPos[0], labelPos[1], fontSize, labelColor.getValue());
-            else
-                font.renderWithShadow(matrices, label, labelPos[0], labelPos[1], fontSize, labelColor.getValue());
+            if (!shadow) font.render(matrices, label, labelPos[0], labelPos[1], fontSize, labelColor.getValue());
+            else font.renderWithShadow(matrices, label, labelPos[0], labelPos[1], fontSize, labelColor.getValue());
         }
     }
 
@@ -282,27 +282,4 @@ public class Checkbox extends UIBaseComponent implements QuickImports
         return false;
     }
 
-    public enum TextPosition
-    {
-        /**
-         * Label is placed to the right of the box (default).
-         */
-        RIGHT,
-        /**
-         * Label is placed to the left of the box.
-         */
-        LEFT,
-        /**
-         * Label is placed above the box.
-         */
-        TOP,
-        /**
-         * Label is placed below the box.
-         */
-        BOTTOM,
-        /**
-         * Use the custom {@code textOffsetX} / {@code textOffsetY} values.
-         */
-        CUSTOM
-    }
 }

@@ -2,10 +2,7 @@ package me.axeno.noctisui.client.screen;
 
 import me.axeno.noctisui.client.NoctisUIClient;
 import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
-import me.axeno.noctisui.client.component.Button;
-import me.axeno.noctisui.client.component.Checkbox;
-import me.axeno.noctisui.client.component.DivComponent;
-import me.axeno.noctisui.client.component.TextComponent;
+import me.axeno.noctisui.client.component.*;
 import me.axeno.noctisui.client.component.input.TextInput;
 import me.axeno.noctisui.client.component.system.NotificationManager;
 import me.axeno.noctisui.client.utils.Color;
@@ -21,7 +18,7 @@ public class TestScreen extends Screen
 {
 
     private static final float PANEL_WIDTH = 440;
-    private static final float PANEL_HEIGHT = 400;
+    private static final float PANEL_HEIGHT = 420;
 
     private final List<TextInput> textInputs = new ArrayList<>();
     private DivComponent root;
@@ -51,16 +48,19 @@ public class TestScreen extends Screen
         root.setCornerRadius(14);
         root.setOutline(new Color(60, 60, 80, 180), 1.5f);
 
+        // ── Header ───────────────────────────────────────────────────────────
         root.addChild(new TextComponent(24, 20, "NoctisUI", 18, new Color(220, 220, 255), interBold));
-        root.addChild(new TextComponent(24, 44, "GUI de test — composants Forge 1.20.1", 10, new Color(140, 140, 160),
-                interMedium));
+        root.addChild(new TextComponent(24, 44, "GUI de test — composants Forge 1.20.1", 10,
+                new Color(140, 140, 160), interMedium));
 
+        // ── Nom ──────────────────────────────────────────────────────────────
         root.addChild(new TextComponent(24, 78, "Nom", 9, new Color(180, 180, 200), interMedium));
         nameInput = createTextInput(24, 92, 392, 32, interMedium, TextInput.InputType.TEXT);
         nameInput.setPlaceholder("Entrez votre nom...");
         nameInput.setMaxLength(32);
         root.addChild(nameInput);
 
+        // ── Email ─────────────────────────────────────────────────────────────
         root.addChild(new TextComponent(24, 138, "Email", 9, new Color(180, 180, 200), interMedium));
         emailInput = createTextInput(24, 152, 392, 32, interMedium, TextInput.InputType.EMAIL);
         emailInput.setPlaceholder("exemple@email.com");
@@ -68,16 +68,16 @@ public class TestScreen extends Screen
         emailInput.setValidateOnType(true);
         root.addChild(emailInput);
 
+        // ── Notifications ─────────────────────────────────────────────────────
         root.addChild(new TextComponent(24, 200, "Notifications", 9, new Color(180, 180, 200), interMedium));
         root.addChild(createNotifyButton(24, 214, 92, 28, "Succès", new Color(34, 120, 70), NotificationType.SUCCESS));
         root.addChild(createNotifyButton(124, 214, 92, 28, "Erreur", new Color(160, 45, 45), NotificationType.ERROR));
-        root.addChild(
-                createNotifyButton(224, 214, 92, 28, "Alerte", new Color(160, 110, 30), NotificationType.WARNING));
+        root.addChild(createNotifyButton(224, 214, 92, 28, "Alerte", new Color(160, 110, 30), NotificationType.WARNING));
         root.addChild(createNotifyButton(324, 214, 92, 28, "Info", new Color(45, 90, 160), NotificationType.INFO));
 
+        // ── Checkbox ──────────────────────────────────────────────────────────
         Checkbox rememberCheckbox = new Checkbox(
-                24, 256,
-                14, 14,
+                24, 256, 14, 14,
                 "Se souvenir de moi",
                 new Color(40, 40, 55, 200),
                 new Color(70, 110, 220),
@@ -94,8 +94,31 @@ public class TestScreen extends Screen
         ));
         root.addChild(rememberCheckbox);
 
+        // ── Switch ────────────────────────────────────────────────────────────
+        Switch notifSwitch = new Switch(
+                24, 278, 30, 16,
+                "Activer les notifications",
+                new Color(50, 50, 65, 220),   // track OFF
+                new Color(70, 110, 220),       // track ON
+                Color.WHITE,                   // thumb
+                new Color(180, 180, 200)       // label
+        );
+        notifSwitch.setFont(interMedium);
+        notifSwitch.setFontSize(9);
+        notifSwitch.setOutline(new Color(80, 80, 110, 200), 1f);
+        notifSwitch.hover(160,
+                new Color(65, 65, 80, 240),    // hover track OFF
+                new Color(90, 130, 240),        // hover track ON
+                Color.WHITE                    // hover thumb
+        );
+        notifSwitch.setOnToggle(sw -> setStatus(
+                sw.isEnabled() ? "Notifications activées." : "Notifications désactivées.",
+                sw.isEnabled() ? new Color(120, 200, 140) : new Color(180, 180, 200)
+        ));
+        root.addChild(notifSwitch);
 
-        Button submitButton = new Button(24, 284, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
+        // ── Boutons principaux ────────────────────────────────────────────────
+        Button submitButton = new Button(24, 306, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
         submitButton.setRadius(8);
         submitButton.setFont(interBold);
         submitButton.setFontSize(11);
@@ -103,7 +126,7 @@ public class TestScreen extends Screen
         submitButton.setOnClick(b -> onSubmit());
         root.addChild(submitButton);
 
-        Button closeButton = new Button(226, 284, 190, 34, "Fermer (Esc)", new Color(55, 55, 65),
+        Button closeButton = new Button(226, 306, 190, 34, "Fermer (Esc)", new Color(55, 55, 65),
                 new Color(200, 200, 210));
         closeButton.setRadius(8);
         closeButton.setFont(interMedium);
@@ -112,9 +135,12 @@ public class TestScreen extends Screen
         closeButton.setOnClick(b -> onClose());
         root.addChild(closeButton);
 
-        statusText = new TextComponent(24, 338, "Prêt.", 9, new Color(120, 200, 140), interMedium);
+        // ── Status ────────────────────────────────────────────────────────────
+        statusText = new TextComponent(24, 358, "Prêt.", 9, new Color(120, 200, 140), interMedium);
         root.addChild(statusText);
     }
+
+    // ── Helpers ───────────────────────────────────────────────────────────────
 
     private TextInput createTextInput(float x, float y, float w, float h, FontAtlas font, TextInput.InputType type)
     {
@@ -191,13 +217,13 @@ public class TestScreen extends Screen
         statusText.setColor(color);
     }
 
+    // ── Screen overrides ──────────────────────────────────────────────────────
+
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
     {
         if (root != null)
-        {
             root.render(guiGraphics, mouseX, mouseY, partialTick);
-        }
     }
 
     @Override
@@ -210,9 +236,7 @@ public class TestScreen extends Screen
     public boolean mouseClicked(double mouseX, double mouseY, int button)
     {
         if (root != null)
-        {
             root.mouseClicked(mouseX, mouseY, button);
-        }
         return true;
     }
 
@@ -222,9 +246,7 @@ public class TestScreen extends Screen
         for (TextInput input : textInputs)
         {
             if (input.keyPressed(keyCode, scanCode, modifiers))
-            {
                 return true;
-            }
         }
 
         if (keyCode == GLFW.GLFW_KEY_ESCAPE)
@@ -242,9 +264,7 @@ public class TestScreen extends Screen
         for (TextInput input : textInputs)
         {
             if (input.charTyped(chr, modifiers))
-            {
                 return true;
-            }
         }
         return super.charTyped(chr, modifiers);
     }
