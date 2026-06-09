@@ -1,13 +1,12 @@
 package me.axeno.noctisui.client.api.system;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import me.axeno.noctisui.client.common.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
-import com.mojang.blaze3d.vertex.BufferUploader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.ShaderInstance;
@@ -16,12 +15,14 @@ import org.joml.Vector3f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 
-public class Render2DEngine implements QuickImports {
+public class Render2DEngine implements QuickImports
+{
 
     private static RenderTarget blurCapture;
     private static RenderTarget blurTemp;
 
-    public static void drawLine(PoseStack matrices, float x, float y, float x1, float y1, float width, Color color) {
+    public static void drawLine(PoseStack matrices, float x, float y, float x1, float y1, float width, Color color)
+    {
         float r = color.getRed() / 255f;
         float g = color.getGreen() / 255f;
         float b = color.getBlue() / 255f;
@@ -43,7 +44,8 @@ public class Render2DEngine implements QuickImports {
         RenderSystem.depthFunc(GL11.GL_LEQUAL);
     }
 
-    public static void drawOutline(PoseStack matrices, float x, float y, float width, float height, Color color) {
+    public static void drawOutline(PoseStack matrices, float x, float y, float width, float height, Color color)
+    {
         drawLine(matrices, x, y, x + width, y, 1, color);
         drawLine(matrices, x + width, y, x + width, y + height, 1, color);
         drawLine(matrices, x - 0.5f, y + height, x + width, y + height, 1, color);
@@ -51,22 +53,26 @@ public class Render2DEngine implements QuickImports {
     }
 
     public static void drawRoundedOutline(PoseStack matrices, float x1, float y1, float x2, float y2, float radius,
-                                          float width, Color color) {
+                                          float width, Color color)
+    {
         drawRoundedOutline(matrices, x1, y1, x2, y2, radius, width, color, color, color, color);
     }
 
     public static void drawOutlinedGradient(PoseStack matrices, float x1, float y1, float x2, float y2, float radius,
-                                            float width, Color color1, Color color2) {
+                                            float width, Color color1, Color color2)
+    {
         drawRoundedOutline(matrices, x1, y1, x2, y2, radius, width, color1, color1, color2, color2);
     }
 
     public static void drawOutlinedVerticalGradient(PoseStack matrices, float x1, float y1, float x2, float y2,
-                                                    float radius, float width, Color color1, Color color2) {
+                                                    float radius, float width, Color color1, Color color2)
+    {
         drawRoundedOutline(matrices, x1, y1, x2, y2, radius, width, color2, color1, color2, color1);
     }
 
     public static void drawOutline(PoseStack matrices, float x1, float y1, float x2, float y2, float width,
-                                   Color color) {
+                                   Color color)
+    {
         drawLine(matrices, x1, y1, x1 + x2, y1, width, color);
         drawLine(matrices, x1 + x2, y1, x1 + x2, y1 + y2, width, color);
         drawLine(matrices, x1 - 0.5f, y1 + y2, x1 + x2, y1 + y2, width, color);
@@ -74,8 +80,10 @@ public class Render2DEngine implements QuickImports {
     }
 
     public static void drawRoundedOutline(PoseStack matrices, float x1, float y1, float x2, float y2, float radius,
-                                          float width, Color color1, Color color2, Color color3, Color color4) {
-        if (Shaders.ROUNDED_OUTLINE == null) {
+                                          float width, Color color1, Color color2, Color color3, Color color4)
+    {
+        if (Shaders.ROUNDED_OUTLINE == null)
+        {
             Shaders.load();
         }
 
@@ -110,7 +118,8 @@ public class Render2DEngine implements QuickImports {
         renderShape(buffer, Shaders.ROUNDED_OUTLINE);
     }
 
-    public static void drawRect(PoseStack matrices, float x, float y, float width, float height, Color color) {
+    public static void drawRect(PoseStack matrices, float x, float y, float width, float height, Color color)
+    {
         float r = color.getRed() / 255f;
         float g = color.getGreen() / 255f;
         float b = color.getBlue() / 255f;
@@ -135,24 +144,29 @@ public class Render2DEngine implements QuickImports {
     }
 
     public static void drawRoundedRect(PoseStack matrices, float x1, float y1, float x2, float y2, float radius,
-                                       Color color) {
+                                       Color color)
+    {
         drawRoundedRect(matrices, x1, y1, x2, y2, radius, color, color, color, color);
     }
 
     public static void drawRoundedRect(PoseStack matrices, float x1, float y1, float x2, float y2, float topLeft,
-                                       float topRight, float bottomLeft, float bottomRight, Color color) {
+                                       float topRight, float bottomLeft, float bottomRight, Color color)
+    {
         drawRoundedRect(matrices, x1, y1, x2, y2, topLeft, topRight, bottomLeft, bottomRight, color, color, color, color);
     }
 
     public static void drawRoundedRect(PoseStack matrices, float x1, float y1, float x2, float y2, float radius,
-                                       Color color1, Color color2, Color color3, Color color4) {
+                                       Color color1, Color color2, Color color3, Color color4)
+    {
         drawRoundedRect(matrices, x1, y1, x2, y2, radius, radius, radius, radius, color1, color2, color3, color4);
     }
 
     public static void drawRoundedRect(PoseStack matrices, float x1, float y1, float x2, float y2, float topLeft,
                                        float topRight, float bottomLeft, float bottomRight, Color color1, Color color2,
-                                       Color color3, Color color4) {
-        if (Shaders.ROUNDED_RECT == null) {
+                                       Color color3, Color color4)
+    {
+        if (Shaders.ROUNDED_RECT == null)
+        {
             Shaders.load();
         }
 
@@ -188,20 +202,24 @@ public class Render2DEngine implements QuickImports {
         renderShape(buffer, shaderProg);
     }
 
-    private static void setUniform(ShaderInstance shader, String name, float... values) {
+    private static void setUniform(ShaderInstance shader, String name, float... values)
+    {
         var uniform = shader.getUniform(name);
-        if (uniform != null) {
+        if (uniform != null)
+        {
             uniform.set(values);
         }
     }
 
-    private static Vector3f transformPosition(PoseStack matrices, float x, float y, float z) {
+    private static Vector3f transformPosition(PoseStack matrices, float x, float y, float z)
+    {
         Matrix4f positionMatrix = matrices.last().pose();
         return positionMatrix.transformPosition(x, y, z, new Vector3f());
     }
 
     public static void prepareBuffer(BufferBuilder buffer, Matrix4f positionMatrix, float x1, float y1, float x2,
-                                     float y2, float z, Color color) {
+                                     float y2, float z, Color color)
+    {
         float r = color.getRed() / 255f;
         float g = color.getGreen() / 255f;
         float b = color.getBlue() / 255f;
@@ -212,7 +230,8 @@ public class Render2DEngine implements QuickImports {
         buffer.vertex(positionMatrix, x2, y1, z).color(r, g, b, a).endVertex();
     }
 
-    private static void renderShape(BufferBuilder buffer, ShaderInstance shaderInstance) {
+    private static void renderShape(BufferBuilder buffer, ShaderInstance shaderInstance)
+    {
         RenderSystem.disableDepthTest();
 
         ShaderInstance last = RenderSystem.getShader();
@@ -231,7 +250,8 @@ public class Render2DEngine implements QuickImports {
         RenderSystem.enableDepthTest();
     }
 
-    private static float[] getActualCoordinates(Vector3f start, Vector3f end, float scaleFactor, int windowHeight) {
+    private static float[] getActualCoordinates(Vector3f start, Vector3f end, float scaleFactor, int windowHeight)
+    {
         float actualX1 = start.x * scaleFactor;
         float actualX2 = end.x * scaleFactor;
         float actualY1 = windowHeight - start.y * scaleFactor;
@@ -239,19 +259,24 @@ public class Render2DEngine implements QuickImports {
         return new float[]{actualX1, actualY1, actualX2, actualY2};
     }
 
-    private static void ensureBlurTargets(int width, int height) {
-        if (blurCapture == null) {
+    private static void ensureBlurTargets(int width, int height)
+    {
+        if (blurCapture == null)
+        {
             blurCapture = new TextureTarget(width, height, false, false);
             blurCapture.setFilterMode(9729);
-        } else if (blurCapture.viewWidth != width || blurCapture.viewHeight != height) {
+        } else if (blurCapture.viewWidth != width || blurCapture.viewHeight != height)
+        {
             blurCapture.resize(width, height, false);
             blurCapture.setFilterMode(9729);
         }
 
-        if (blurTemp == null) {
+        if (blurTemp == null)
+        {
             blurTemp = new TextureTarget(width, height, false, false);
             blurTemp.setFilterMode(9729);
-        } else if (blurTemp.viewWidth != width || blurTemp.viewHeight != height) {
+        } else if (blurTemp.viewWidth != width || blurTemp.viewHeight != height)
+        {
             blurTemp.resize(width, height, false);
             blurTemp.setFilterMode(9729);
         }
@@ -260,7 +285,8 @@ public class Render2DEngine implements QuickImports {
     /**
      * Copies the current main framebuffer into an off-screen target so blur can sample it safely.
      */
-    private static void captureMainFramebuffer(RenderTarget main) {
+    private static void captureMainFramebuffer(RenderTarget main)
+    {
         int width = main.viewWidth;
         int height = main.viewHeight;
         ensureBlurTargets(width, height);
@@ -279,7 +305,8 @@ public class Render2DEngine implements QuickImports {
     private static void setupBlurShader(ShaderInstance shader, RenderTarget source, int fbW, int fbH,
                                         float dirX, float dirY, float brightness,
                                         float applyMask, float pixelX, float pixelY, float pixelW, float pixelH,
-                                        float cornerRadius) {
+                                        float cornerRadius)
+    {
         setUniform(shader, "InputResolution", (float) fbW, (float) fbH);
         setUniform(shader, "BlurDirection", dirX, dirY);
         setUniform(shader, "Brightness", brightness);
@@ -290,7 +317,8 @@ public class Render2DEngine implements QuickImports {
         shader.setSampler("InputSampler", source.getColorTextureId());
     }
 
-    private static void drawBlurQuad(Matrix4f matrix, float x, float y, float width, float height) {
+    private static void drawBlurQuad(Matrix4f matrix, float x, float y, float width, float height)
+    {
         BufferBuilder buffer = Tesselator.getInstance().getBuilder();
         buffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         buffer.vertex(matrix, x, y + height, 0).endVertex();
@@ -304,7 +332,8 @@ public class Render2DEngine implements QuickImports {
                                     float dirX, float dirY, float brightness, float applyMask,
                                     Matrix4f matrix, float x, float y, float width, float height,
                                     float pixelX, float pixelY, float pixelW, float pixelH, float cornerRadius,
-                                    int fbW, int fbH) {
+                                    int fbW, int fbH)
+    {
         ShaderInstance shader = Shaders.BLUR;
         dest.bindWrite(true);
 
@@ -314,9 +343,11 @@ public class Render2DEngine implements QuickImports {
         ShaderInstance last = RenderSystem.getShader();
         RenderSystem.setShader(() -> shader);
         RenderSystem.disableDepthTest();
-        if (applyMask < 0.5f) {
+        if (applyMask < 0.5f)
+        {
             RenderSystem.disableBlend();
-        } else {
+        } else
+        {
             RenderSystem.enableBlend();
             RenderSystem.defaultBlendFunc();
         }
@@ -338,8 +369,10 @@ public class Render2DEngine implements QuickImports {
      * @param brightness output brightness multiplier
      */
     public static void drawBlur(PoseStack matrices, float x, float y, float width, float height,
-                                float radius, float quality, float brightness) {
-        if (Shaders.BLUR == null || width <= 0 || height <= 0) {
+                                float radius, float quality, float brightness)
+    {
+        if (Shaders.BLUR == null || width <= 0 || height <= 0)
+        {
             return;
         }
 
@@ -375,7 +408,8 @@ public class Render2DEngine implements QuickImports {
         RenderTarget src = blurCapture;
         RenderTarget dst = blurTemp;
 
-        for (int i = 0; i < iterations; i++) {
+        for (int i = 0; i < iterations; i++)
+        {
             runBlurPass(src, dst, mainTarget,
                     1f, 0f, 1f, 0f,
                     fullscreenMatrix, 0, 0, scaledW, scaledH,
