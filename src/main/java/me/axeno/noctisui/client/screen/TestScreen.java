@@ -104,7 +104,6 @@ public class TestScreen extends Screen
         Slider volumeSlider = new Slider(24, 306, 392, 20, "Volume", new Color(180, 180, 200), 0f, 100f, 50f, new Color(70, 110, 220), new Color(80, 80, 100), Color.WHITE);
         volumeSlider.setFont(interMedium);
         volumeSlider.setFontSize(9);
-        volumeSlider.setShowTicks(true);
         volumeSlider.setStep(1f);
         volumeSlider.setShowValueInLabel(true);
         volumeSlider.setValue(50f);

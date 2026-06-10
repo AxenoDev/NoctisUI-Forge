@@ -2,7 +2,6 @@ package me.axeno.noctisui.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import me.axeno.noctisui.NoctisUI;
-import me.axeno.noctisui.client.api.system.Shaders;
 import me.axeno.noctisui.client.component.system.NotificationManager;
 import me.axeno.noctisui.client.screen.TestScreen;
 import me.axeno.noctisui.config.NoctisUIConfig;
@@ -19,7 +18,8 @@ import net.minecraftforge.fml.common.Mod;
 import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(modid = NoctisUI.MODID, value = Dist.CLIENT)
-public class ClientEvents {
+public class ClientEvents
+{
 
     public static final KeyMapping OPEN_TEST_GUI = new KeyMapping(
             "key.noctisui.open_test_gui",
@@ -30,29 +30,36 @@ public class ClientEvents {
     );
 
     @SubscribeEvent
-    public static void onRenderGui(RenderGuiEvent.Post event) {
-        if (NotificationManager.getInstance() != null) {
+    public static void onRenderGui(RenderGuiEvent.Post event)
+    {
+        if (NotificationManager.getInstance() != null)
+        {
             NotificationManager.renderNotifications(event.getGuiGraphics(), event.getPartialTick());
         }
     }
 
     @SubscribeEvent
-    public static void onKeyInput(InputEvent.Key event) {
-        if (OPEN_TEST_GUI.consumeClick() && NoctisUIConfig.CLIENT.isDebugEnabled()) {
+    public static void onKeyInput(InputEvent.Key event)
+    {
+        if (OPEN_TEST_GUI.consumeClick() && NoctisUIConfig.CLIENT.isDebugEnabled())
+        {
             Minecraft.getInstance().setScreen(new TestScreen());
         }
     }
 
     @Mod.EventBusSubscriber(modid = NoctisUI.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
-    public static class ModBus {
+    public static class ModBus
+    {
 
         @SubscribeEvent
-        public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event) {
+        public static void onRegisterKeyMappings(RegisterKeyMappingsEvent event)
+        {
             event.register(OPEN_TEST_GUI);
         }
 
         @SubscribeEvent
-        public static void onRegisterReloadListeners(RegisterClientReloadListenersEvent event) {
+        public static void onRegisterReloadListeners(RegisterClientReloadListenersEvent event)
+        {
             event.registerReloadListener(new NoctisUIAssetsReloadListener());
         }
 
