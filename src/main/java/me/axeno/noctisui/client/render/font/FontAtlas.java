@@ -1,4 +1,4 @@
-package me.axeno.noctisui.client.api.system.render.font;
+package me.axeno.noctisui.client.render.font;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -8,8 +8,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import lombok.Setter;
 import me.axeno.noctisui.NoctisUI;
-import me.axeno.noctisui.client.api.system.Shaders;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.render.Shaders;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ShaderInstance;

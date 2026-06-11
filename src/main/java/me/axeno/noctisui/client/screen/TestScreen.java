@@ -1,10 +1,10 @@
 package me.axeno.noctisui.client.screen;
 
 import me.axeno.noctisui.client.NoctisUIClient;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
+import me.axeno.noctisui.client.render.font.FontAtlas;
 import me.axeno.noctisui.client.component.*;
 import me.axeno.noctisui.client.component.input.TextInput;
-import me.axeno.noctisui.client.component.system.NotificationManager;
+import me.axeno.noctisui.client.component.notification.NotificationManager;
 import me.axeno.noctisui.client.utils.Color;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -18,13 +18,14 @@ public class TestScreen extends Screen
 {
 
     private static final float PANEL_WIDTH = 440;
-    private static final float PANEL_HEIGHT = 420;
+    private static final float PANEL_HEIGHT = 540;
 
     private final List<TextInput> textInputs = new ArrayList<>();
     private DivComponent root;
     private TextComponent statusText;
     private TextInput nameInput;
     private TextInput emailInput;
+    private ProgressBar progressBar;
 
     public TestScreen()
     {
@@ -75,44 +76,117 @@ public class TestScreen extends Screen
         root.addChild(createNotifyButton(324, 214, 92, 28, "Info", new Color(45, 90, 160), NotificationType.INFO));
 
         // ── Checkbox ──────────────────────────────────────────────────────────
-        Checkbox rememberCheckbox = new Checkbox(24, 256, 14, 14, "Se souvenir de moi", new Color(40, 40, 55, 200), new Color(70, 110, 220), new Color(180, 180, 200));
+        Checkbox rememberCheckbox = new Checkbox(24, 256, 14, 14,
+                "Se souvenir de moi",
+                new Color(40, 40, 55, 200), new Color(70, 110, 220), new Color(180, 180, 200));
         rememberCheckbox.setFont(interMedium);
         rememberCheckbox.setFontSize(9);
         rememberCheckbox.setRadius(3);
         rememberCheckbox.setOutline(new Color(80, 80, 110, 200), 1f);
         rememberCheckbox.hover(160, new Color(55, 55, 75, 220), new Color(90, 130, 240));
-        rememberCheckbox.setOnToggle(cb -> setStatus(cb.isChecked() ? "Se souvenir activé." : "Se souvenir désactivé.", cb.isChecked() ? new Color(120, 200, 140) : new Color(180, 180, 200)));
+        rememberCheckbox.setOnClick(cb -> setStatus(
+                cb.isChecked() ? "Se souvenir activé." : "Se souvenir désactivé.",
+                cb.isChecked() ? new Color(120, 200, 140) : new Color(180, 180, 200)));
         root.addChild(rememberCheckbox);
 
         // ── Switch ────────────────────────────────────────────────────────────
-        Switch notifSwitch = new Switch(24, 278, 30, 16, "Activer les notifications", new Color(50, 50, 65, 220), // track OFF
-                new Color(70, 110, 220), // track ON
-                Color.WHITE, // thumb
-                new Color(180, 180, 200) // label
-        );
+        Switch notifSwitch = new Switch(24, 278, 30, 16,
+                "Activer les notifications",
+                new Color(50, 50, 65, 220),
+                new Color(70, 110, 220),
+                Color.WHITE,
+                new Color(180, 180, 200));
         notifSwitch.setFont(interMedium);
         notifSwitch.setFontSize(9);
         notifSwitch.setOutline(new Color(80, 80, 110, 200), 1f);
-        notifSwitch.hover(160, new Color(65, 65, 80, 240), // hover track OFF
-                new Color(90, 130, 240), // hover track ON
-                Color.WHITE // hover thumb
-        );
-        notifSwitch.setOnToggle(sw -> setStatus(sw.isEnabled() ? "Notifications activées." : "Notifications désactivées.", sw.isEnabled() ? new Color(120, 200, 140) : new Color(180, 180, 200)));
+        notifSwitch.hover(160, new Color(65, 65, 80, 240), new Color(90, 130, 240), Color.WHITE);
+        notifSwitch.setOnClick(sw -> setStatus(
+                sw.isEnabled() ? "Notifications activées." : "Notifications désactivées.",
+                sw.isEnabled() ? new Color(120, 200, 140) : new Color(180, 180, 200)));
         root.addChild(notifSwitch);
 
         // ── Slider ─────────────────────────────────────────────────────────────
-        Slider volumeSlider = new Slider(24, 306, 392, 20, "Volume", new Color(180, 180, 200), 0f, 100f, 50f, new Color(70, 110, 220), new Color(80, 80, 100), Color.WHITE);
+        Slider volumeSlider = new Slider(24, 306, 392, 20,
+                "Volume", new Color(180, 180, 200),
+                0f, 100f, 50f,
+                new Color(70, 110, 220), new Color(80, 80, 100), Color.WHITE);
         volumeSlider.setFont(interMedium);
         volumeSlider.setFontSize(9);
         volumeSlider.setStep(1f);
         volumeSlider.setShowValueInLabel(true);
         volumeSlider.setValue(50f);
         volumeSlider.setOnChanged(s -> setStatus("Volume: " + Math.round(s.getValue()), new Color(140, 200, 220)));
-        volumeSlider.setOnRelease(s -> NotificationManager.getInstance().info("slider_release", "Slider", "Valeur réglée: " + Math.round(s.getValue())));
+        volumeSlider.setOnRelease(s -> NotificationManager.getInstance().info(
+                "slider_release", "Slider", "Valeur réglée: " + Math.round(s.getValue())));
         root.addChild(volumeSlider);
 
+        // ── Progress Bar ───────────────────────────────────────────────────────
+        root.addChild(new TextComponent(24, 338, "Progression", 9, new Color(180, 180, 200), interMedium));
+
+        List<ProgressBar.Step> steps = List.of(
+                new ProgressBar.Step("Départ", 0.00f),
+                new ProgressBar.Step("Config", 0.33f),
+                new ProgressBar.Step("Vérif.", 0.66f),
+                new ProgressBar.Step("Terminé", 1.00f)
+        );
+
+        progressBar = new ProgressBar(24, 358, 392, 20,
+                new Color(70, 110, 220),
+                new Color(80, 80, 100),
+                steps);
+        progressBar.setTrackHeight(6f);
+        progressBar.setAnimationDuration(500L);
+        progressBar.setStepMarkerSize(12f);
+        progressBar.setStepLabelFont(interMedium);
+        progressBar.setStepLabelFontSize(8);
+        progressBar.setShowTooltip(true);
+        progressBar.setStepDoneColor(new Color(70, 110, 220));
+        progressBar.setStepTodoColor(new Color(60, 60, 80));
+        progressBar.setStepActiveColor(new Color(110, 150, 255));
+        progressBar.hover(200, new Color(90, 130, 240), new Color(90, 90, 115));
+        progressBar.setOnStepReached(pb -> setStatus(
+                "Étape atteinte : " + steps.get(pb.getCurrentStepIndex()).label(),
+                new Color(140, 200, 220)));
+        progressBar.setOnComplete(pb ->
+        {
+            setStatus("Progression terminée !", new Color(120, 200, 140));
+            NotificationManager.getInstance().success("progress_done", "Progression", "Toutes les étapes sont complètes !");
+        });
+        // Start at step 0
+        progressBar.goToStep(0);
+        root.addChild(progressBar);
+
+        // Step navigation buttons
+        Button prevStepBtn = new Button(24, 388, 124, 26, "← Étape préc.", new Color(55, 55, 70), new Color(180, 180, 200));
+        prevStepBtn.setRadius(6);
+        prevStepBtn.setFont(interMedium);
+        prevStepBtn.setFontSize(9);
+        prevStepBtn.hover(150, new Color(70, 70, 90), Color.WHITE);
+        prevStepBtn.setOnClick(b -> progressBar.previousStep());
+        root.addChild(prevStepBtn);
+
+        Button nextStepBtn = new Button(156, 388, 124, 26, "Étape suiv. →", new Color(70, 110, 220), Color.WHITE);
+        nextStepBtn.setRadius(6);
+        nextStepBtn.setFont(interMedium);
+        nextStepBtn.setFontSize(9);
+        nextStepBtn.hover(150, new Color(90, 130, 240), new Color(255, 255, 200));
+        nextStepBtn.setOnClick(b -> progressBar.nextStep());
+        root.addChild(nextStepBtn);
+
+        Button resetProgressBtn = new Button(292, 388, 124, 26, "Réinitialiser", new Color(55, 55, 70), new Color(180, 180, 200));
+        resetProgressBtn.setRadius(6);
+        resetProgressBtn.setFont(interMedium);
+        resetProgressBtn.setFontSize(9);
+        resetProgressBtn.hover(150, new Color(70, 70, 90), Color.WHITE);
+        resetProgressBtn.setOnClick(b ->
+        {
+            progressBar.goToStep(0);
+            setStatus("Progression réinitialisée.", new Color(180, 180, 200));
+        });
+        root.addChild(resetProgressBtn);
+
         // ── Boutons principaux ────────────────────────────────────────────────
-        Button submitButton = new Button(24, 340, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
+        Button submitButton = new Button(24, 428, 190, 34, "Valider", new Color(70, 110, 220), Color.WHITE);
         submitButton.setRadius(8);
         submitButton.setFont(interBold);
         submitButton.setFontSize(11);
@@ -120,7 +194,7 @@ public class TestScreen extends Screen
         submitButton.setOnClick(b -> onSubmit());
         root.addChild(submitButton);
 
-        Button closeButton = new Button(226, 340, 190, 34, "Fermer (Esc)", new Color(55, 55, 65), new Color(200, 200, 210));
+        Button closeButton = new Button(226, 428, 190, 34, "Fermer (Esc)", new Color(55, 55, 65), new Color(200, 200, 210));
         closeButton.setRadius(8);
         closeButton.setFont(interMedium);
         closeButton.setFontSize(10);
@@ -129,7 +203,7 @@ public class TestScreen extends Screen
         root.addChild(closeButton);
 
         // ── Status ────────────────────────────────────────────────────────────
-        statusText = new TextComponent(24, 388, "Prêt.", 9, new Color(120, 200, 140), interMedium);
+        statusText = new TextComponent(24, 476, "Prêt.", 9, new Color(120, 200, 140), interMedium);
         root.addChild(statusText);
     }
 

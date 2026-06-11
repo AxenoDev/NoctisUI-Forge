@@ -1,14 +1,14 @@
 package me.axeno.noctisui.client.component;
 
-import me.axeno.noctisui.client.NoctisUIClient;
-import me.axeno.noctisui.client.api.system.Render2DEngine;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
-import me.axeno.noctisui.client.common.QuickImports;
-import me.axeno.noctisui.client.utils.Color;
+import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
+import me.axeno.noctisui.client.NoctisUIClient;
+import me.axeno.noctisui.client.render.Render2DEngine;
+import me.axeno.noctisui.client.render.font.FontAtlas;
+import me.axeno.noctisui.client.QuickImports;
+import me.axeno.noctisui.client.utils.Color;
 import net.minecraft.client.gui.GuiGraphics;
-import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.function.Consumer;
 
@@ -48,7 +48,7 @@ import java.util.function.Consumer;
  * @author axeno
  */
 @Getter
-public class Button extends UIBaseComponent implements QuickImports
+public class Button extends ClickableComponent<Button> implements QuickImports
 {
 
     @Getter
@@ -82,8 +82,6 @@ public class Button extends UIBaseComponent implements QuickImports
     @Setter
     private int radius = 5;
 
-    private Consumer<Button> onClickAction;
-
     /**
      * Creates a new button instance.
      *
@@ -97,7 +95,9 @@ public class Button extends UIBaseComponent implements QuickImports
      */
     public Button(float x, float y, float width, float height, String label, Color backgroundColor, Color labelColor)
     {
-        super(x, y, width, height); this.label = label; this.backgroundColor = backgroundColor;
+        super(x, y, width, height);
+        this.label = label;
+        this.backgroundColor = backgroundColor;
         this.labelColor = labelColor;
     }
 
@@ -106,7 +106,8 @@ public class Button extends UIBaseComponent implements QuickImports
      */
     public void setOutline(Color outlineColor, float outlineWidth)
     {
-        this.outlineColor = outlineColor; this.outlineWidth = outlineWidth;
+        this.outlineColor = outlineColor;
+        this.outlineWidth = outlineWidth;
     }
 
     /**
@@ -114,43 +115,44 @@ public class Button extends UIBaseComponent implements QuickImports
      */
     public void hover(long animationDuration, Color hoverBackgroundColor, Color hoverLabelColor)
     {
-        this.hasHover = true; this.hoverAnimationDuration = animationDuration;
-        this.hoverBackgroundColor = hoverBackgroundColor; this.hoverLabelColor = hoverLabelColor;
-    }
-
-    /**
-     * Sets the action to be performed when the button is clicked.
-     */
-    public void setOnClick(Consumer<Button> action)
-    {
-        this.onClickAction = action;
+        this.hasHover = true;
+        this.hoverAnimationDuration = animationDuration;
+        this.hoverBackgroundColor = hoverBackgroundColor;
+        this.hoverLabelColor = hoverLabelColor;
     }
 
     @Override
     public void render(GuiGraphics context, double mouseX, double mouseY, float delta)
     {
-        PoseStack matrices = context.pose(); Color currentBackgroundColor = backgroundColor;
+        PoseStack matrices = context.pose();
+        Color currentBackgroundColor = backgroundColor;
         Color currentLabelColor = labelColor;
 
-        boolean isMouseOver = mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+        boolean isMouseOver = isMouseOver(mouseX, mouseY);
 
-        if (hasHover) {
-            if (isMouseOver && !isHovered) {
-                isHovered = true; hoverStartTime = System.currentTimeMillis();
-            }
-            else if (!isMouseOver && isHovered) {
-                isHovered = false; hoverStartTime = System.currentTimeMillis();
+        if (hasHover)
+        {
+            if (isMouseOver && !isHovered)
+            {
+                isHovered = true;
+                hoverStartTime = System.currentTimeMillis();
+            } else if (!isMouseOver && isHovered)
+            {
+                isHovered = false;
+                hoverStartTime = System.currentTimeMillis();
             }
 
-            if (hoverStartTime != -1) {
+            if (hoverStartTime != -1)
+            {
                 long elapsed = System.currentTimeMillis() - hoverStartTime;
                 float progress = Math.min(1f, (float) elapsed / hoverAnimationDuration);
 
-                if (isHovered) {
+                if (isHovered)
+                {
                     currentBackgroundColor = Color.interpolateColor(backgroundColor, hoverBackgroundColor, progress);
                     currentLabelColor = Color.interpolateColor(labelColor, hoverLabelColor, progress);
-                }
-                else {
+                } else
+                {
                     currentBackgroundColor = Color.interpolateColor(hoverBackgroundColor, backgroundColor, progress);
                     currentLabelColor = Color.interpolateColor(hoverLabelColor, labelColor, progress);
                     if (progress == 1f) hoverStartTime = -1;
@@ -168,21 +170,12 @@ public class Button extends UIBaseComponent implements QuickImports
         float textX = x + (width - textWidth) / 2;
         float textY = y + (height - textHeight) / 2;
 
-        if (!shadow) {
+        if (!shadow)
+        {
             font.render(matrices, label, textX, textY, fontSize, currentLabelColor.getValue());
-        }
-        else {
+        } else
+        {
             font.renderWithShadow(matrices, label, textX, textY, fontSize, currentLabelColor.getValue());
         }
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
-    {
-        if (mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height) {
-            if (onClickAction != null) {
-                onClickAction.accept(this);
-            } return true;
-        } return false;
     }
 }

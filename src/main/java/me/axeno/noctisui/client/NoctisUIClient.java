@@ -1,8 +1,8 @@
 package me.axeno.noctisui.client;
 
-import me.axeno.noctisui.client.api.system.Shaders;
-import me.axeno.noctisui.client.api.system.render.font.Fonts;
-import me.axeno.noctisui.client.component.system.NotificationManager;
+import me.axeno.noctisui.client.render.Shaders;
+import me.axeno.noctisui.client.render.font.Fonts;
+import me.axeno.noctisui.client.component.notification.NotificationManager;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 

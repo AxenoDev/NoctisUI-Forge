@@ -1,7 +1,7 @@
-package me.axeno.noctisui.client.api.system.render.font;
+package me.axeno.noctisui.client.render.font;
 
 import lombok.Getter;
-import me.axeno.noctisui.client.component.system.NotificationManager;
+import me.axeno.noctisui.client.component.notification.NotificationManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 
 import java.io.IOException;

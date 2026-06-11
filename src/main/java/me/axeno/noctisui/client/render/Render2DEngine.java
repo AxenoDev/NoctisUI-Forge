@@ -1,11 +1,11 @@
-package me.axeno.noctisui.client.api.system;
+package me.axeno.noctisui.client.render;
 
 import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.pipeline.TextureTarget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;

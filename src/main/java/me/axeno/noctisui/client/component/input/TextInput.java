@@ -1,9 +1,9 @@
 package me.axeno.noctisui.client.component.input;
 
 import me.axeno.noctisui.client.NoctisUIClient;
-import me.axeno.noctisui.client.api.system.Render2DEngine;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.render.Render2DEngine;
+import me.axeno.noctisui.client.render.font.FontAtlas;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.component.UIBaseComponent;
 import me.axeno.noctisui.client.utils.Color;
 import me.axeno.noctisui.client.utils.MathUtils;

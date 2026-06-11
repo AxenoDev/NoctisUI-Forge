@@ -1,4 +1,4 @@
-package me.axeno.noctisui.client.api.system.render.font;
+package me.axeno.noctisui.client.render.font;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;

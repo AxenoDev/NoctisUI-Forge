@@ -1,9 +1,9 @@
-package me.axeno.noctisui.client.api.system;
+package me.axeno.noctisui.client.render;
 
 import com.mojang.blaze3d.shaders.Uniform;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import me.axeno.noctisui.NoctisUI;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.QuickImports;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.renderer.ShaderInstance;

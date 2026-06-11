@@ -3,17 +3,15 @@ package me.axeno.noctisui.client.component;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
-import me.axeno.noctisui.client.api.system.Render2DEngine;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.render.Render2DEngine;
+import me.axeno.noctisui.client.render.font.FontAtlas;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
 import me.axeno.noctisui.client.utils.MathUtils;
 import me.axeno.noctisui.client.utils.TextPosition;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.function.Consumer;
-
-public class Switch extends UIBaseComponent implements QuickImports
+public class Switch extends ClickableComponent<Switch> implements QuickImports
 {
 
     @Setter
@@ -78,8 +76,6 @@ public class Switch extends UIBaseComponent implements QuickImports
 
     private float thumbProgress = 0f;
 
-    private Consumer<Switch> onToggleAction;
-
     public Switch(float x, float y, float width, float height, Color trackOffColor, Color trackOnColor, Color thumbColor)
     {
         super(x, y, width, height);
@@ -141,11 +137,6 @@ public class Switch extends UIBaseComponent implements QuickImports
         this.hoverTrackOffColor = hoverTrackOffColor;
         this.hoverTrackOnColor = hoverTrackOnColor;
         this.hoverThumbColor = hoverThumbColor;
-    }
-
-    public void setOnToggle(Consumer<Switch> action)
-    {
-        this.onToggleAction = action;
     }
 
     private int resolvedTrackRadius()
@@ -276,19 +267,9 @@ public class Switch extends UIBaseComponent implements QuickImports
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    protected void onClicked()
     {
-        if (isClickable(mouseX, mouseY))
-        {
-            enabled = !enabled;
-            toggleStartTime = System.currentTimeMillis();
-
-            if (onToggleAction != null)
-            {
-                onToggleAction.accept(this);
-            }
-            return true;
-        }
-        return false;
+        this.enabled = !enabled;
+        this.toggleStartTime = System.currentTimeMillis();
     }
 }

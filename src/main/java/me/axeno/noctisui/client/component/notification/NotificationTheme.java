@@ -1,4 +1,4 @@
-package me.axeno.noctisui.client.component.system;
+package me.axeno.noctisui.client.component.notification;
 
 import me.axeno.noctisui.client.utils.Color;
 

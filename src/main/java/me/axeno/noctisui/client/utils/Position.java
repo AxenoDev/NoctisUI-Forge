@@ -1,4 +1,4 @@
-package me.axeno.noctisui.utils;
+package me.axeno.noctisui.client.utils;
 
 public class Position {
 

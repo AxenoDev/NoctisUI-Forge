@@ -1,4 +1,4 @@
-package me.axeno.noctisui.utils;
+package me.axeno.noctisui.client.utils;
 
 public class Color3f {
     private final float r, g, b;

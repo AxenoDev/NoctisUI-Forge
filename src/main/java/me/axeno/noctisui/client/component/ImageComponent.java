@@ -47,13 +47,12 @@ public class ImageComponent extends UIBaseComponent
      * @param width   The width of the image.
      * @param height  The height of the image.
      * @param texture The ResourceLocation of the texture to be displayed.
-     *
      *                <pre>
-     *                                                             {@code
-     *                                                             ResourceLocation texture = new ResourceLocation("modid", "textures/gui/image.png");
-     *                                                             ImageComponent image = new ImageComponent(10, 10, 64, 64, texture);
-     *                                                             }
-     *                                                             </pre>
+     *                {@code
+     *                ResourceLocation texture = new ResourceLocation("modid", "textures/gui/image.png");
+     *                ImageComponent image = new ImageComponent(10, 10, 64, 64, texture);
+     *                }
+     *                </pre>
      */
     public ImageComponent(int x, int y, int width, int height, ResourceLocation texture)
     {

@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
 import me.axeno.noctisui.client.NoctisUIClient;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
+import me.axeno.noctisui.client.render.font.FontAtlas;
 import me.axeno.noctisui.client.utils.Color;
 import net.minecraft.client.gui.GuiGraphics;
 

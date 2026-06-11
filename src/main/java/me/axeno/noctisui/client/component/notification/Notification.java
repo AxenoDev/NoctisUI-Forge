@@ -1,6 +1,6 @@
-package me.axeno.noctisui.client.component.system;
+package me.axeno.noctisui.client.component.notification;
 
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
 import lombok.Getter;
 import lombok.Setter;

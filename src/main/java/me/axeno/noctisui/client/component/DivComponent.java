@@ -4,8 +4,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
-import me.axeno.noctisui.client.api.system.Render2DEngine;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.render.Render2DEngine;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
 import net.minecraft.client.gui.GuiGraphics;
 
@@ -241,8 +241,7 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     @Override
     public void render(GuiGraphics context, double mouseX, double mouseY, float delta)
     {
-        if (!visible)
-            return;
+        if (!visible) return;
 
         PoseStack matrices = context.pose();
         RenderSystem.enableBlend();
@@ -262,8 +261,7 @@ public class DivComponent extends UIBaseComponent implements QuickImports
             {
                 Render2DEngine.drawRoundedRect(matrices, 0, 0, width, height, cornerRadius, backgroundColor);
                 if (outlineWidth > 0)
-                    Render2DEngine.drawRoundedOutline(matrices, 0, 0, width, height, cornerRadius, outlineWidth,
-                            outlineColor);
+                    Render2DEngine.drawRoundedOutline(matrices, 0, 0, width, height, cornerRadius, outlineWidth, outlineColor);
             } else
             {
                 Render2DEngine.drawRect(matrices, 0, 0, width, height, backgroundColor);
@@ -272,13 +270,11 @@ public class DivComponent extends UIBaseComponent implements QuickImports
             }
         }
 
-        if (customRenderer != null)
-            customRenderer.run();
+        if (customRenderer != null) customRenderer.run();
 
         for (UIBaseComponent child : children)
         {
-            if (!child.isVisible() || !child.enabled)
-                continue;
+            if (!child.isVisible() || !child.enabled) continue;
             child.render(context, mouseX - x, mouseY - y, delta);
         }
 
@@ -320,8 +316,7 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     {
         if (contains(mouseX, mouseY))
         {
-            if (onClickAction != null)
-                onClickAction.accept(this);
+            if (onClickAction != null) onClickAction.accept(this);
 
             for (UIComponent child : children)
                 child.mouseClicked(mouseX - x, mouseY - y, 0);
@@ -340,11 +335,9 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button)
     {
-        if (!visible || !contains(mouseX, mouseY))
-            return false;
+        if (!visible || !contains(mouseX, mouseY)) return false;
 
-        if (onClickAction != null)
-            onClickAction.accept(this);
+        if (onClickAction != null) onClickAction.accept(this);
 
         children.forEach(child -> child.mouseClicked(mouseX - x, mouseY - y, button));
         return false;
@@ -353,8 +346,7 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY)
     {
-        if (!visible || !contains(mouseX, mouseY))
-            return false;
+        if (!visible || !contains(mouseX, mouseY)) return false;
 
         children.forEach(child -> child.mouseDragged(mouseX - x, mouseY - y, button, deltaX, deltaY));
         return false;
@@ -363,8 +355,7 @@ public class DivComponent extends UIBaseComponent implements QuickImports
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button)
     {
-        if (!visible || !contains(mouseX, mouseY))
-            return false;
+        if (!visible || !contains(mouseX, mouseY)) return false;
 
         children.forEach(child -> child.mouseReleased(mouseX - x, mouseY - y, button));
         return false;

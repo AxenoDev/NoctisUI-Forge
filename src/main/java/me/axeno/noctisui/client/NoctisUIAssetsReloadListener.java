@@ -1,6 +1,6 @@
 package me.axeno.noctisui.client;
 
-import me.axeno.noctisui.client.api.system.Shaders;
+import me.axeno.noctisui.client.render.Shaders;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;

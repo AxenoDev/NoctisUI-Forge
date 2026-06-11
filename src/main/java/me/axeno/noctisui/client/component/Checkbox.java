@@ -3,19 +3,17 @@ package me.axeno.noctisui.client.component;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
-import me.axeno.noctisui.client.api.system.Render2DEngine;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.render.Render2DEngine;
+import me.axeno.noctisui.client.render.font.FontAtlas;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
 import me.axeno.noctisui.client.utils.TextPosition;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.function.Consumer;
-
 /**
  *
  */
-public class Checkbox extends UIBaseComponent implements QuickImports
+public class Checkbox extends ClickableComponent<Checkbox> implements QuickImports
 {
 
     private static final String LUCIDE_CHECK = "\uE954";
@@ -75,8 +73,6 @@ public class Checkbox extends UIBaseComponent implements QuickImports
 
     private long hoverStartTime = -1;
     private boolean isHovered = false;
-
-    private Consumer<Checkbox> onToggleAction;
 
     public Checkbox(float x, float y, float width, float height, Color backgroundColor, Color checkColor)
     {
@@ -150,11 +146,6 @@ public class Checkbox extends UIBaseComponent implements QuickImports
         this.hoverAnimationDuration = animationDuration;
         this.hoverBackgroundColor = hoverBackgroundColor;
         this.hoverCheckColor = hoverCheckColor;
-    }
-
-    public void setOnToggle(Consumer<Checkbox> action)
-    {
-        this.onToggleAction = action;
     }
 
     private float[] resolveLabelPosition()
@@ -268,18 +259,8 @@ public class Checkbox extends UIBaseComponent implements QuickImports
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    protected void onClicked()
     {
-        if (isClickable(mouseX, mouseY))
-        {
-            checked = !checked;
-            if (onToggleAction != null)
-            {
-                onToggleAction.accept(this);
-            }
-            return true;
-        }
-        return false;
+        this.checked = !checked;
     }
-
 }

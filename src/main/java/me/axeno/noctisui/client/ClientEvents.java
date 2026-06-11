@@ -2,7 +2,7 @@ package me.axeno.noctisui.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import me.axeno.noctisui.NoctisUI;
-import me.axeno.noctisui.client.component.system.NotificationManager;
+import me.axeno.noctisui.client.component.notification.NotificationManager;
 import me.axeno.noctisui.client.screen.TestScreen;
 import me.axeno.noctisui.config.NoctisUIConfig;
 import net.minecraft.client.KeyMapping;

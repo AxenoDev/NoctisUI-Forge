@@ -3,12 +3,12 @@ package me.axeno.noctisui.client.component;
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
-import me.axeno.noctisui.client.api.system.Render2DEngine;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.render.Render2DEngine;
+import me.axeno.noctisui.client.render.font.FontAtlas;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
+import me.axeno.noctisui.client.utils.MathUtils;
 import me.axeno.noctisui.client.utils.TextPosition;
-import me.axeno.noctisui.utils.MathsUtils;
 import net.minecraft.client.gui.GuiGraphics;
 
 import java.util.function.Consumer;
@@ -186,7 +186,7 @@ public class Slider extends UIBaseComponent implements QuickImports
 
     public void setValue(float newValue)
     {
-        this.value = snap(MathsUtils.clamp(newValue, min, max));
+        this.value = snap(MathUtils.clamp(newValue, min, max));
         this.rawProgress = normalise(this.value);
     }
 

@@ -1,13 +1,13 @@
-package me.axeno.noctisui.client.component.system;
+package me.axeno.noctisui.client.component.notification;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import lombok.Getter;
 import lombok.Setter;
 import me.axeno.noctisui.client.NoctisUIClient;
-import me.axeno.noctisui.client.api.system.Render2DEngine;
-import me.axeno.noctisui.client.api.system.render.font.FontAtlas;
-import me.axeno.noctisui.client.api.system.render.font.Fonts;
-import me.axeno.noctisui.client.common.QuickImports;
+import me.axeno.noctisui.client.render.Render2DEngine;
+import me.axeno.noctisui.client.render.font.FontAtlas;
+import me.axeno.noctisui.client.render.font.Fonts;
+import me.axeno.noctisui.client.QuickImports;
 import me.axeno.noctisui.client.utils.Color;
 import net.minecraft.client.gui.GuiGraphics;
 
